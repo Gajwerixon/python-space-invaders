@@ -49,7 +49,7 @@ class HUD:
 
     def draw_credit(self, surface):
         """Draw credit"""
-        text_surface_1 = self.font.render(f'C R E D I T     {self.game.credit:02d}', True, 'white')
-        text_rect_1 = text_surface_1.get_rect(topleft = CREDIT_TEXT_POS)
+        text_surface_1 = self.font.render(f'C R E D I T    {self.game.credit:02d}', True, 'white')
+        text_rect_1 = text_surface_1.get_rect(topright = CREDIT_TEXT_POS)
         surface.blit(text_surface_1, text_rect_1)
 
