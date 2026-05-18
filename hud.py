@@ -11,7 +11,7 @@ class HUD:
         # Line
         self.line_image = pygame.Surface((WIDTH, LINE_WIDTH))
         self.line_image.fill(GREEN)
-        self.line_rect= self.line_image.get_rect(topleft = LINE_POS)
+        self.line_rect= self.line_image.get_rect(topleft = (0, HUD_BOTTOM_Y))
 
         # Lives (ship images)
         self.ship_image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
@@ -35,7 +35,7 @@ class HUD:
         """Draw player_1 score"""
         # Text
         text_surface = self.font.render('S C O R E < 1 >', True, 'white')
-        text_rect = text_surface.get_rect(topleft = TEXT_SCORE_1_POS)
+        text_rect = text_surface.get_rect(topleft = (TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y))
         surface.blit(text_surface, text_rect)
 
         # Score
@@ -49,7 +49,7 @@ class HUD:
         """Draw high score"""
         # Text
         text_surface = self.font.render('H I - S C O R E', True, 'white')
-        text_rect = text_surface.get_rect(midtop = TEXT_HIGH_SCORE_POS)
+        text_rect = text_surface.get_rect(midtop = (WIDTH // 2, TOP_HUD_MARGIN_Y))
         surface.blit(text_surface, text_rect)
 
         # Score
@@ -63,7 +63,7 @@ class HUD:
         """Draw player_2 score"""
         # Text
         text_surface = self.font.render('S C O R E < 2 >', True, 'white')
-        text_rect = text_surface.get_rect(topright = TEXT_SCORE_2_POS)
+        text_rect = text_surface.get_rect(topright = (WIDTH - TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y))
         surface.blit(text_surface, text_rect)
 
     def draw_bottom_hud(self, surface):
@@ -78,16 +78,19 @@ class HUD:
         lives = self.game.lives
 
         text_surface = self.font.render(f'{lives}', True, 'white')
-        text_rect = text_surface.get_rect(topleft = LIVES_TEXT_POS)
+        text_rect = text_surface.get_rect(topleft = (BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y))
         surface.blit(text_surface, text_rect)
 
+        x, y = text_rect.topright
+        x_start = x + 35
+        
         if (lives - 1) != 0:
             for i in range(lives - 1):
-                surface.blit(self.ship_image, (SHIP_IMG_POS[0] + i * SHIP_IMG_OFFSET, SHIP_IMG_POS[1]))
+                surface.blit(self.ship_image, (x_start + i * SHIP_IMG_OFFSET, y))
 
     def draw_credit(self, surface):
         """Draw credit"""
         text_surface_1 = self.font.render(f'C R E D I T    {self.game.credit:02d}', True, 'white')
-        text_rect_1 = text_surface_1.get_rect(topright = CREDIT_TEXT_POS)
+        text_rect_1 = text_surface_1.get_rect(topright = (WIDTH - BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y))
         surface.blit(text_surface_1, text_rect_1)
 
