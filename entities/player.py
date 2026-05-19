@@ -4,11 +4,12 @@ from config import *
 
 class Player(pygame.sprite.Sprite):
     """Player class"""
-    def __init__(self, groups):
-        super().__init__(groups) 
+    def __init__(self, game, groups):
+        super().__init__(groups)
+        self.game = game
+
         self.image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, PLAYER_SIZE)
-
         green = pygame.Surface(self.image.get_size()).convert_alpha()
         green.fill(GREEN)
         self.image.blit(green, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
@@ -18,16 +19,11 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.Vector2()
         self.speed = PLAYER_SPEED
-
-    def input(self):
-        """Player input"""
-        key = pygame.key.get_pressed()
-        if key[pygame.K_RIGHT] or key[pygame.K_d]:
-            self.direction.x = 1
-        elif key[pygame.K_LEFT] or key[pygame.K_a]:
-            self.direction.x = -1
-        else:
-            self.direction.x = 0
+    
+    def update(self, dt):
+        """Update player"""
+        self.input()
+        self.movement(dt)
 
     def movement(self, dt):
         """Player movement"""
@@ -44,7 +40,15 @@ class Player(pygame.sprite.Sprite):
             self.rect.centerx = self.pos.x
             self.rect.centery = self.pos.y
 
-    def update(self, dt):
-        """Update player"""
-        self.input()
-        self.movement(dt)
+    def input(self):
+        """Player input"""
+        key = pygame.key.get_pressed()
+        if key[pygame.K_RIGHT] or key[pygame.K_d]:
+            self.direction.x = 1
+        elif key[pygame.K_LEFT] or key[pygame.K_a]:
+            self.direction.x = -1
+        elif not (key[pygame.K_LEFT] or key[pygame.K_a] or key[pygame.K_RIGHT] or key[pygame.K_d]):
+            self.direction.x = 0
+
+        if key[pygame.K_SPACE]:
+            self.game.create_bullet(self.rect.midtop)

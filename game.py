@@ -1,9 +1,12 @@
 import pygame
 
 from config import *
-from entities.player import Player
+
 from level import Level
 from hud import HUD
+
+from entities.player import Player
+from entities.bullet import Bullet
 
 class Game:
     """Game class"""
@@ -15,7 +18,7 @@ class Game:
         self.mode = 'PLAYING'
 
         # Game variables
-        self.lives = 2
+        self.lives = 3
         self.credit = 0
         self.score = 0
         self.high_score = 0
@@ -23,9 +26,10 @@ class Game:
         # Groups
         self.player_group = pygame.sprite.Group()
         self.shield_group = pygame.sprite.Group()
+        self.bullet_group = pygame.sprite.Group()
         
         # Sprites
-        self.player = Player(self.player_group)
+        self.player = Player(self, self.player_group)
 
         # Level and HUD
         self.level = Level(self.shield_group)
@@ -49,14 +53,21 @@ class Game:
         """Update game"""
         self.player_group.update(dt)
         self.shield_group.update(dt)
+        self.bullet_group.update(dt)
 
     def draw(self):
         """Draw on screen"""
         self.surface.fill('black')
-
+        
         self.player_group.draw(self.surface)
         self.shield_group.draw(self.surface)
+        self.bullet_group.draw(self.surface)
 
         self.hud.draw_hud(self.surface)
 
         pygame.display.flip()
+
+    def create_bullet(self, pos):
+        """Create bullet"""
+        if not self.bullet_group:
+            Bullet(pos, self.bullet_group)
