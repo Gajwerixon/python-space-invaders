@@ -23,10 +23,14 @@ class Game:
         self.score = 0
         self.high_score = 0
 
+        # Assets
+        self.assets = self.load_assets()
+
         # Groups
         self.player_group = pygame.sprite.Group()
         self.shield_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
+        self.effect_group = pygame.sprite.Group()
         
         # Sprites
         self.player = Player(self, self.player_group)
@@ -54,6 +58,7 @@ class Game:
         self.player_group.update(dt)
         self.shield_group.update(dt)
         self.bullet_group.update(dt)
+        self.effect_group.update(dt)
 
     def draw(self):
         """Draw on screen"""
@@ -62,6 +67,7 @@ class Game:
         self.player_group.draw(self.surface)
         self.shield_group.draw(self.surface)
         self.bullet_group.draw(self.surface)
+        self.effect_group.draw(self.surface)
 
         self.hud.draw_hud(self.surface)
 
@@ -70,4 +76,11 @@ class Game:
     def create_bullet(self, pos):
         """Create bullet"""
         if not self.bullet_group:
-            Bullet(pos, self.bullet_group)
+            Bullet(pos, self, self.bullet_group)
+
+    def load_assets(self):
+        """Load assets"""
+        assets = {
+            'bullet_miss_fx': pygame.image.load('assets/entities/effect/bullet_miss_fx.png')
+        }
+        return assets
