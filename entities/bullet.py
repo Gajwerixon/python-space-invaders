@@ -26,7 +26,7 @@ class Bullet(pygame.sprite.Sprite):
             current_pos = self.rect.midtop
             self.kill()
             Effect(
-                self.game.assets['bullet_miss_fx'], 
+                self.game.effects_assets['bullet_miss_fx'], 
                 current_pos, 
                 self.game.effect_group
             )

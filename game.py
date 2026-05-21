@@ -1,10 +1,9 @@
 import pygame
 
+from pathlib import Path
 from config import *
-
 from level import Level
 from hud import HUD
-
 from entities.player import Player
 from entities.bullet import Bullet
 
@@ -24,13 +23,14 @@ class Game:
         self.high_score = 0
 
         # Assets
-        self.assets = self.load_assets()
+        self.aliens, self.effects = self.load_assets()
 
         # Groups
         self.player_group = pygame.sprite.Group()
         self.shield_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
         self.effect_group = pygame.sprite.Group()
+        self.alien_group = pygame.sprite.Group()
         
         # Sprites
         self.player = Player(self, self.player_group)
@@ -80,7 +80,17 @@ class Game:
 
     def load_assets(self):
         """Load assets"""
-        assets = {
-            'bullet_miss_fx': pygame.image.load('assets/entities/effect/bullet_miss_fx.png')
+        aliens_base_path = Path('assets/entities/aliens/')
+        aliens = {}
+        for alien in aliens_base_path.iterdir():
+            aliens[alien.name] = {}
+            for folder in alien.iterdir():
+                aliens[alien.name][folder.name] = []              
+                for img in folder.iterdir():
+                    aliens[alien.name][folder.name].append(pygame.image.load(img))
+
+        effects = {
+            'bullet_miss_fx': pygame.image.load('assets/entities/effect/bullet_miss_fx.png'),
         }
-        return assets
+                    
+        return aliens, effects                                                  
