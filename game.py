@@ -6,6 +6,7 @@ from level import Level
 from hud import HUD
 from entities.player import Player
 from entities.bullet import Bullet
+from entities.alien_formation import AlienFormation
 
 class Game:
     """Game class"""
@@ -34,6 +35,7 @@ class Game:
         
         # Sprites
         self.player = Player(self, self.player_group)
+        self.formation = AlienFormation(self.aliens, self.alien_group)
 
         # Level and HUD
         self.level = Level(self.shield_group)
@@ -59,6 +61,7 @@ class Game:
         self.shield_group.update(dt)
         self.bullet_group.update(dt)
         self.effect_group.update(dt)
+        self.alien_group.update(dt)
 
     def draw(self):
         """Draw on screen"""
@@ -68,6 +71,7 @@ class Game:
         self.shield_group.draw(self.surface)
         self.bullet_group.draw(self.surface)
         self.effect_group.draw(self.surface)
+        self.alien_group.draw(self.surface)
 
         self.hud.draw_hud(self.surface)
 

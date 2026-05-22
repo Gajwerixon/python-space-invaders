@@ -47,3 +47,5 @@ BULLET_SPEED = 512
 
 # Explosion
 EXPLOSION_SIZE = (20, 20)
+
+# Aliens
