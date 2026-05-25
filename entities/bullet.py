@@ -1,7 +1,6 @@
 import pygame
-
 from config import *
-from systems import Timer
+from entities.effect import Effect
 
 class Bullet(pygame.sprite.Sprite):
     """Bullet class"""
@@ -26,26 +25,10 @@ class Bullet(pygame.sprite.Sprite):
             current_pos = self.rect.midtop
             self.kill()
             Effect(
-                self.game.effects['bullet_miss_fx'], 
-                current_pos, 
-                self.game.effect_group
+                self.game.effects['bullet_miss_fx'],
+                'bullet',
+                current_pos,
+                0.25, 
+                self.game.effect_group,
             )
-
-class Effect(pygame.sprite.Sprite):
-    """Effect class"""
-    def __init__(self, image, pos, groups):
-        super().__init__(groups)
-        self.image = image
-        self.image = pygame.transform.scale(self.image, EXPLOSION_SIZE)
-        self.rect = self.image.get_rect(midtop = pos)
-
-        self.bullet_miss_fx = Timer(0.25)
-        self.bullet_miss_fx.start()
-
-    def update(self, dt):
-        """Update explosion"""
-        if self.bullet_miss_fx.active:
-            self.bullet_miss_fx.update(dt)
-        else:
-            self.kill()
 
