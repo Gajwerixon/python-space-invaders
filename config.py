@@ -54,3 +54,7 @@ NUM_ALIENS = 11
 ALIENS_SETUP = ('alien_3', 'alien_2', 'alien_2', 'alien_1', 'alien_1')
 ALIEN_STEP = 20
 ALIEN_SIZE = (36, 28)
+
+DESCENT_STEP_Y = 25
+ALIEN_TIMER = 0.025
+FORMATION_VELOCITY = 512

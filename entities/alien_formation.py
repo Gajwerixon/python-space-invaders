@@ -13,89 +13,115 @@ class AlienFormation:
         self.formation_list = []
         self.create_formation()
 
-        self.velocity = 256
+        self.velocity = FORMATION_VELOCITY
         self.direction = pygame.Vector2(1, 0)
 
-        self.alien_timer = Timer(0.025)
+        self.alien_timer = Timer(ALIEN_TIMER)
 
         self.current_row = -1
         self.current_alien = 0
-        self.animation_index = 0
+        self.animation_index = 1
+
         self.cycle_completed = False
-        self.wall_touched = False
+
+        self.state = 'move_horizontal'
+        self.double_step_count = 0
 
     def update(self, dt):
         self.alien_timer.update(dt)
-        self.formation_logic(dt)
+        self.update_formation(dt)
+        self.update_alien_animation()
 
     def draw(self, surface):
         for alien in self.alien_group:
             surface.blit(alien.image, alien.rect.topleft)
 
-    def formation_logic(self, dt):
-        """Formation logic"""
-        if not self.alien_timer.active and not self.wall_touched:
+    def update_formation(self, dt):
+        """Update formation"""
+        alien = self.get_current_alien()
+
+        if self.state == 'move_horizontal' and not self.alien_timer.active:
+            self.move_horizontal(alien, dt)
+            if self.check_wall_collision():
+                self.handle_collision()
+
+        if self.state == 'move_down' and not self.alien_timer.active:
+            print(self.double_step_count)
+            step_multiplier = self.set_double_step()
+            if self.current_alien == 0 and self.current_row == -1 and step_multiplier == 1:
+                self.state = 'move_horizontal'
+                return
+            self.move_down(alien, step_multiplier, dt)
+        
+    def get_current_alien(self):
+        """Get current alien"""
+        row = self.formation_list[self.current_row]
+
+        if self.current_alien >= len(row):
+            self.current_alien = 0
+            self.current_row -= 1
+
+            if self.current_row < -len(self.formation_list):
+                self.current_row = -1
+                self.cycle_completed = True
+        
             row = self.formation_list[self.current_row]
-            if self.current_alien >= len(row):
-                self.current_alien = 0
-                self.current_row -= 1
-                if self.current_row < -len(self.formation_list):
-                    self.current_row = -1
-                    self.cycle_completed = True
-            
-                row = self.formation_list[self.current_row]
-            
-            alien = row[self.current_alien]
-
-            alien.pos.x += self.direction.x * self.velocity * dt
-            alien.rect.center = alien.pos
-            alien.image = alien.images[self.animation_index]
-
-            self.current_alien += 1
-            self.alien_timer.start()
         
+        alien = row[self.current_alien]
+        return alien
+
+    def move_horizontal(self, alien, dt):
+        """Move alien horizontal"""     
+        alien.pos.x += self.direction.x * self.velocity * dt
+        alien.rect.center = alien.pos
+        alien.image = alien.images[self.animation_index]
+
+        self.current_alien += 1
+        self.alien_timer.start()
+
+    def check_wall_collision(self):
+        """Check if any alien had collision with wall"""
+        for alien_row in self.formation_list:
+            for alien in alien_row:
+                if alien.rect.right >= PLAY_AREA.right - 25 or alien.rect.left <= PLAY_AREA.left + 25:
+                    self.double_step_count = self.current_alien + 1 * abs(self.current_row)
+                    return True
+
+    def handle_collision(self):
+        """Handle wall collision"""
+        self.direction *= -1
+        self.current_alien = 0
+        self.current_row = -1
+
+        self.state = 'move_down'
+        self.alien_timer.active = False
+
+    def set_double_step(self):
+        """Return 2 if the alien move double timer in given direction else 1"""
+        if self.double_step_count < 0:
+            self.double_step_count -= 1
+            return 2
+        return 1
+
+    def move_down(self, alien, step_multiplier, dt):
+        """Move alien down"""
+        alien.pos.x += self.direction.x * step_multiplier * self.velocity * dt
+        alien.pos.y += DESCENT_STEP_Y
+
+        alien.rect.center = alien.pos
+        alien.image = alien.images[self.animation_index]
+
+        self.current_alien += 1
+        self.alien_timer.start()
+
+    def update_alien_animation(self):
+        """Update alien animation"""
+        # If the cycle is completed (all the aliens change the image)
         if self.cycle_completed:
-            self.animation_index += 1
-            if self.animation_index > 1:
-                self.animation_index = 0
+            if self.animation_index == 1: self.animation_index = 0
+            else: self.animation_index = 1
             self.cycle_completed = False
-        
-        if not self.wall_touched:
-            for alien_row in self.formation_list:
-                for alien in alien_row:
-                    if alien.rect.right >= PLAY_AREA.right - 25 or alien.rect.left <= PLAY_AREA.left + 25:
-                        self.wall_touched = True
-                        self.direction *= -1
 
-                        self.current_alien = 0
-                        self.current_row = -1
-                        break
-        
-        if self.wall_touched:
-            if not self.alien_timer.active:
-                row = self.formation_list[self.current_row]
-                if self.current_alien >= len(row):
-                    self.current_alien = 0
-                    self.current_row -= 1
-                    if self.current_row < -len(self.formation_list):
-                        self.current_row = -1
-                        self.cycle_completed = True
-                        self.wall_touched = False
-                        return
-                
-                    row = self.formation_list[self.current_row]
-
-                alien = row[self.current_alien]
-                
-                alien.pos.x += self.direction.x * self.velocity * dt
-                alien.pos.y += 25
-                alien.rect.center = alien.pos
-                alien.image = alien.images[self.animation_index]
-
-                self.current_alien += 1
-                self.alien_timer.start()
-        
-    
     def create_formation(self):
         """Create alien formation"""
         for alien_col in range(len(ALIENS_SETUP)):
