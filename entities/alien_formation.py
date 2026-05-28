@@ -8,7 +8,7 @@ class AlienFormation:
     def __init__(self, assets, group):
         self.assets = assets
         self.alien_group = group
-        self.start_pos = (64, PLAY_AREA.top + 100)
+        self.start_pos = (500, PLAY_AREA.top + 100)
         
         self.formation_list = []
         self.create_formation()
@@ -41,17 +41,10 @@ class AlienFormation:
         alien = self.get_current_alien()
 
         if self.state == 'move_horizontal' and not self.alien_timer.active:
-            self.move_horizontal(alien, dt)
-            if self.check_wall_collision():
-                self.handle_collision()
+            self.update_horizontal(alien, dt)
 
         if self.state == 'move_down' and not self.alien_timer.active:
-            print(self.double_step_count)
-            step_multiplier = self.set_double_step()
-            if self.current_alien == 0 and self.current_row == -1 and step_multiplier == 1:
-                self.state = 'move_horizontal'
-                return
-            self.move_down(alien, step_multiplier, dt)
+            self.update_vertical(alien, dt)
         
     def get_current_alien(self):
         """Get current alien"""
@@ -66,9 +59,13 @@ class AlienFormation:
                 self.cycle_completed = True
         
             row = self.formation_list[self.current_row]
-        
-        alien = row[self.current_alien]
-        return alien
+
+        return row[self.current_alien]
+
+    def update_horizontal(self, alien, dt):
+        self.move_horizontal(alien, dt)
+        if self.check_wall_collision():
+            self.handle_collision()
 
     def move_horizontal(self, alien, dt):
         """Move alien horizontal"""     
@@ -84,11 +81,12 @@ class AlienFormation:
         for alien_row in self.formation_list:
             for alien in alien_row:
                 if alien.rect.right >= PLAY_AREA.right - 25 or alien.rect.left <= PLAY_AREA.left + 25:
-                    self.double_step_count = self.current_alien + 1 * abs(self.current_row)
                     return True
 
     def handle_collision(self):
         """Handle wall collision"""
+        self.double_step_count = self.current_alien - 1 * abs(self.current_row)
+
         self.direction *= -1
         self.current_alien = 0
         self.current_row = -1
@@ -96,9 +94,17 @@ class AlienFormation:
         self.state = 'move_down'
         self.alien_timer.active = False
 
-    def set_double_step(self):
+    def update_vertical(self, alien, dt):
+        """Update alien vertical"""
+        step_multiplier = self.get_step_multiplier()
+        if self.current_alien == 0 and self.current_row == -1 and step_multiplier == 1:
+            self.state = 'move_horizontal'
+        else:
+            self.move_down(alien, step_multiplier, dt)
+
+    def get_step_multiplier(self):
         """Return 2 if the alien move double timer in given direction else 1"""
-        if self.double_step_count < 0:
+        if self.double_step_count >= 0:
             self.double_step_count -= 1
             return 2
         return 1
