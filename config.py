@@ -51,7 +51,7 @@ ALIEN_EXPLOSION_FX_SIZE = (36, 28)
 
 # Aliens
 NUM_ALIENS = 11
-ALIENS_SETUP = ('alien_3', 'alien_2', 'alien_2', 'alien_1', 'alien_1')
+ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_1', 'alien_1', 'alien_1')
 ALIEN_STEP = 20
 ALIEN_SIZE = (36, 28)
 
