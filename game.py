@@ -90,7 +90,7 @@ class Game:
         collision = pygame.sprite.groupcollide(self.bullet_group, self.alien_group, True, False)
         if collision:
             for alien in collision.values():
-                Effect(self.effects['alien_explosion_fx'], 'explosion', alien[0].rect.topleft, 0.25, self.effect_group)
+                Effect(self.effects['alien_explosion_fx'], 'explosion', alien[0].rect.center, 0.25, self.effect_group)
                 for a in alien:
                     a.kill()
                 break          
