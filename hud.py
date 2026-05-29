@@ -10,15 +10,12 @@ class HUD:
 
         # Line
         self.line_image = pygame.Surface((WIDTH, LINE_WIDTH))
-        self.line_image.fill(GREEN)
+        self.line_image.fill((255, 255, 255))
         self.line_rect= self.line_image.get_rect(topleft = (0, HUD_BOTTOM_Y))
 
         # Lives (ship images)
         self.ship_image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
         self.ship_image = pygame.transform.scale(self.ship_image, SHIP_IMG_SIZE)
-        green = pygame.Surface(self.ship_image.get_size()).convert_alpha()
-        green.fill(GREEN)
-        self.ship_image.blit(green, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def draw_hud(self, surface):
         """Draw HUD"""
