@@ -10,10 +10,6 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, PLAYER_SIZE)
-        green = pygame.Surface(self.image.get_size()).convert_alpha()
-        green.fill(GREEN)
-        self.image.blit(green, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
-        
         self.rect = self.image.get_rect(midbottom=(PLAY_AREA.centerx, PLAY_AREA.bottom - 60))
         self.pos = pygame.Vector2(self.rect.center)
 
