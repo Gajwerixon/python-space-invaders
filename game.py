@@ -6,7 +6,7 @@ from level import Level
 from hud import HUD
 from entities.player import Player
 from entities.bullet import Bullet
-from entities.effect import Effect
+from entities.effect import EffectManager
 from entities.alien_formation import AlienFormation
 
 class Game:
@@ -25,7 +25,7 @@ class Game:
         self.high_score = 0
 
         # Assets
-        self.aliens, self.effects = self.load_assets()
+        self.aliens_assets, self.effects_assets = self.load_assets()
 
         # Groups
         self.player_group = pygame.sprite.Group()
@@ -36,11 +36,12 @@ class Game:
         
         # Sprites
         self.player = Player(self, self.player_group)
-        self.formation = AlienFormation(self.aliens, self.alien_group)
+        self.formation = AlienFormation(self.aliens_assets, self.alien_group)
 
-        # Level and HUD
+        # Level, HUD and Effect
         self.level = Level(self.shield_group)
         self.hud = HUD(self)
+        self.effect_manager = EffectManager(self.effect_group)
 
     def run(self):
         """Main game loop"""
@@ -62,9 +63,9 @@ class Game:
         self.shield_group.update(dt)
         self.bullet_group.update(dt)
         self.effect_group.update(dt)
-        self.formation.update(dt)
 
         self.bullet_alien_collision()
+        self.bullet_shield_collision()
 
     def draw(self):
         """Draw on screen"""
@@ -87,14 +88,38 @@ class Game:
 
     def bullet_alien_collision(self):
         """Bullet and alien collision"""
-        collision = pygame.sprite.groupcollide(self.bullet_group, self.alien_group, True, False)
-        if collision:
-            for alien in collision.values():
-                Effect(self.effects['alien_explosion_fx'], 'explosion', alien[0].rect.center, 0.25, self.effect_group)
-                for a in alien:
-                    a.kill()
-                break          
+        collision = pygame.sprite.groupcollide(
+            self.bullet_group, 
+            self.alien_group, 
+            True, 
+            True
+        )
+
+        for _, aliens in collision.items():
+            self.effect_manager.spaw_bullet_alien_explosion(
+                self.effects_assets['alien_explosion_fx'],
+                aliens[0].rect.center,
+                0.25
+            )      
             
+    def bullet_shield_collision(self):
+        """Bullet and shield collision"""
+        collision = pygame.sprite.groupcollide(
+            self.bullet_group, 
+            self.shield_group, 
+            True, 
+            False
+        )
+
+        for bullet, shield_list in collision.items():
+            for shield in shield_list:
+                shield.hit(bullet.rect.center)
+                self.effect_manager.spaw_bullet_shield_explosion(
+                    self.effects_assets['bullet_miss_fx'], 
+                    bullet.rect.center,
+                    0.25 
+                )
+
     def load_assets(self):
         """Load assets"""
         aliens_base_path = Path('assets/entities/aliens/')

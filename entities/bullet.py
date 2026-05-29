@@ -24,11 +24,9 @@ class Bullet(pygame.sprite.Sprite):
         if self.rect.top <= PLAY_AREA.top:
             current_pos = self.rect.midtop
             self.kill()
-            Effect(
-                self.game.effects['bullet_miss_fx'],
-                'bullet',
+            self.game.effect_manager.spaw_bullet_miss_explosion(
+                self.game.effects_assets['bullet_miss_fx'],
                 current_pos,
-                0.25, 
-                self.game.effect_group,
+                0.25,
             )
 

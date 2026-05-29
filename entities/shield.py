@@ -13,3 +13,6 @@ class Shield(pygame.sprite.Sprite):
         self.image.blit(green, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
         self.rect = self.image.get_rect(topleft = pos)
+
+    def hit(self, pos):
+        pass

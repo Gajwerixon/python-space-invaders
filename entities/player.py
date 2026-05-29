@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         green.fill(GREEN)
         self.image.blit(green, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         
-        self.rect = self.image.get_rect(midbottom=(PLAY_AREA.centerx, PLAY_AREA.bottom - 64))
+        self.rect = self.image.get_rect(midbottom=(PLAY_AREA.centerx, PLAY_AREA.bottom - 60))
         self.pos = pygame.Vector2(self.rect.center)
 
         self.direction = pygame.Vector2()
