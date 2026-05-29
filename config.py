@@ -47,11 +47,12 @@ BULLET_SPEED = 512
 
 # Explosion
 MISS_EXPLOSION_FX_SIZE = (20, 20)
-ALIEN_EXPLOSION_FX_SIZE = (36, 28)
+ALIEN_EXPLOSION_FX_SIZE = (38, 28)
 
 # Aliens
 NUM_ALIENS = 11
-ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_1', 'alien_1', 'alien_1')
+ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_2', 'alien_2', 'alien_3')
+ALIEN_SCORE = {'alien_1': 10, 'alien_2': 20, 'alien_3': 30}
 ALIEN_STEP = 20
 ALIEN_SIZE = (36, 28)
 

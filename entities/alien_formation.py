@@ -116,19 +116,20 @@ class AlienFormation:
 
     def create_formation(self):
         """Create alien formation"""
-        for alien_col in range(len(ALIENS_SETUP)):
+        for alien_col, alien_type in enumerate(ALIENS_SETUP):
             for alien_row in range(NUM_ALIENS):
                 self.formation_list.append(Alien(
                     (self.start_pos[0] + (alien_row * (ALIEN_STEP + ALIEN_SIZE[0])), 
                     self.start_pos[1] - (alien_col * (ALIEN_STEP + ALIEN_SIZE[1]))),
-                    self.assets[ALIENS_SETUP[alien_col]]['images'],
-                    self.assets[ALIENS_SETUP[alien_col]]['bullets'],
+                    self.assets[alien_type]['images'],
+                    self.assets[alien_type]['bullets'],
+                    ALIEN_SCORE[alien_type],
                     self.alien_group
                 ))
 
 class Alien(pygame.sprite.Sprite):
     """Alien class"""
-    def __init__(self, pos, images, bullets, alien_group):
+    def __init__(self, pos, images, bullets, score, alien_group):
         super().__init__(alien_group)
         self.images = images
         self.image = images[0]
@@ -136,6 +137,7 @@ class Alien(pygame.sprite.Sprite):
         self.pos = pygame.Vector2(self.rect.center)
 
         self.bullets = bullets
+        self.score = score
         
         # Flags
         self.double_step = False
