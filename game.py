@@ -29,7 +29,7 @@ class Game:
 
         # Groups
         self.player_group = pygame.sprite.Group()
-        self.shield_group = pygame.sprite.Group()
+        self.shield_blocks_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
         self.effect_group = pygame.sprite.Group()
         self.alien_group = pygame.sprite.Group()
@@ -39,7 +39,7 @@ class Game:
         self.formation = AlienFormation(self.aliens_assets, self.alien_group)
 
         # Level, HUD and Effect
-        self.level = Level(self.shield_group)
+        self.level = Level(self.shield_blocks_group)
         self.hud = HUD(self)
         self.effect_manager = EffectManager(self.effect_group)
 
@@ -60,7 +60,7 @@ class Game:
     def update(self, dt):
         """Update game"""
         self.player_group.update(dt)
-        self.shield_group.update(dt)
+        self.shield_blocks_group.update(dt)
         self.bullet_group.update(dt)
         self.effect_group.update(dt)
 
@@ -72,7 +72,7 @@ class Game:
         self.surface.fill('black')
         
         self.player_group.draw(self.surface)
-        self.shield_group.draw(self.surface)
+        self.shield_blocks_group.draw(self.surface)
         self.bullet_group.draw(self.surface)
         self.effect_group.draw(self.surface)
         self.formation.draw(self.surface)
@@ -104,21 +104,13 @@ class Game:
             
     def bullet_shield_collision(self):
         """Bullet and shield collision"""
-        collision = pygame.sprite.groupcollide(
-            self.bullet_group, 
-            self.shield_group, 
-            True, 
-            False
-        )
-
-        for bullet, shield_list in collision.items():
-            for shield in shield_list:
-                shield.hit(bullet.rect.center)
-                self.effect_manager.spaw_bullet_shield_explosion(
-                    self.effects_assets['bullet_miss_fx'], 
-                    bullet.rect.center,
-                    0.25 
-                )
+        collision = pygame.sprite.groupcollide(self.bullet_group, self.shield_blocks_group, True, True)
+        for bullet, _ in collision.items():
+            self.effect_manager.spaw_bullet_shield_explosion(
+                self.effects_assets['bullet_miss_fx'],
+                bullet.rect.midtop,
+                0.25
+            ) 
 
     def load_assets(self):
         """Load assets"""
