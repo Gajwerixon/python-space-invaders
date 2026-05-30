@@ -18,9 +18,6 @@ class EffectManager:
         """Spaw explosion effect after bullet miss"""
         Effect(image, pos, duration, self.group, anchor='midtop')
 
-    def spaw_bullet_miss_explosion(self, image, pos, duration):
-        Effect(image, pos, duration, self.group, anchor='midtop')
-
 class Effect(pygame.sprite.Sprite):
     """Effect class"""
     def __init__(self, image, pos, duration, groups, anchor="center"):
