@@ -105,7 +105,8 @@ class Game:
     def bullet_shield_collision(self):
         """Bullet and shield collision"""
         collision = pygame.sprite.groupcollide(self.bullet_group, self.shield_blocks_group, True, True)
-        for bullet, _ in collision.items():
+        for bullet, shields in collision.items():
+            shields[0].damage_shield()
             self.effect_manager.spaw_bullet_shield_explosion(
                 self.effects_assets['bullet_miss_fx'],
                 bullet.rect.midtop,
