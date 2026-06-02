@@ -9,32 +9,21 @@ class AlienFormation:
         self.assets = assets
         self.alien_group = group
 
-        # Create formation
         self.start_pos = (64, PLAY_AREA.bottom - 400)
         self.formation_list = []
         self.create_formation()
 
-        # State
-        self.state = 'move_horizontal'
-
-        # Movement
-        self.descent_step_x = DESCENT_STEP_X
         self.direction = pygame.Vector2(1, 0)
         self.alien_timer = Timer(ALIEN_TIMER)
 
-        # Current variables
+        self.state = 'move_horizontal'
         self.current_alien = 0
         self.animation_index = 1
-        self.cycle_completed = False
-
 
     def update(self, dt):
         """Update alien formation"""
         self.alien_timer.update(dt)
         self.update_formation()
-        if self.cycle_completed:
-            self.toggle_animation_frame()
-            self.cycle_completed = False
 
     def draw(self, surface):
         """Draw alien formation"""
@@ -43,33 +32,82 @@ class AlienFormation:
 
     def update_formation(self):
         """Update formation"""
+        if self.alien_timer.active:
+            return
+        
         alien = self.get_current_alien()
+
         if not alien.alive():
-            self.current_alien = self.get_alive_index()
+            self.current_alien = self.find_next_alive_index()
+            return
+        
+        if self.state == 'move_horizontal':
+            self.move_horizontal(alien)
         else:
-            self.movement(alien)
+            self.move_vertical(alien)
+
+        self.update_alien_visuals(alien)
+
+        wall_collision = self.check_wall_collision()
+        self.advance_cycle(wall_collision)
+        self.alien_timer.start()
+
+    def move_horizontal(self, alien):
+        """Move alien horizontal"""
+        alien.pos.x += self.direction.x * HORIZONTAL_STEP
+
+    def move_vertical(self, alien):
+        """Move current alien vertical"""
+        alien.pos.x += self.direction.x * (HORIZONTAL_STEP * 2)
+        alien.pos.y += VERTICAL_STEP
+
+    def check_wall_collision(self):
+        """Check wall collision"""
+        for alien in self.formation_list:
+            if alien.alive():
+                if alien.rect.right >= PLAY_AREA.right - FORMATION_MARGIN or alien.rect.left <= FORMATION_MARGIN:
+                    return True
+        return False
+
+    def advance_cycle(self, wall_collision):
+        """Advance cycle"""
+        self.current_alien += 1
+
+        if self.current_alien >= len(self.formation_list):
+            self.current_alien = 0
+            self.animation_index = 1 - self.animation_index
+
+            if wall_collision:
+                self.state = 'move_vertical'
+                self.direction *= -1
+            else:
+                self.state = 'move_horizontal'
 
     def get_current_alien(self):
         """Get current alien"""
         return self.formation_list[self.current_alien]
 
-    def get_alive_index(self):
+    def find_next_alive_index(self):
         """Get next alive index of alien in formation"""
         start = self.current_alien
         index = start
 
         while True:
-
-            if self.formation_list[index].alive():
-                return index
-
             index += 1
 
             if index >= len(self.formation_list):
                 index = 0
 
+            if self.formation_list[index].alive():
+                return index
+
             if index == start:
                 return None
+
+    def update_alien_visuals(self, alien):
+        """Update alien position and change alien image"""
+        alien.rect.center = alien.pos
+        alien.image = alien.images[self.animation_index]
 
     def create_formation(self):
         """Create alien formation"""
@@ -95,6 +133,3 @@ class Alien(pygame.sprite.Sprite):
 
         self.bullets = bullets
         self.score = score
-        
-        # Flags
-        self.double_step = False

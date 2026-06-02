@@ -70,11 +70,12 @@ EDGE_DESTROY_CHANCE = 6
 
 # Aliens
 NUM_ALIENS = 11
-ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_2', 'alien_2', 'alien_3')
+ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_1', 'alien_1', 'alien_1')
 ALIEN_SCORE = {'alien_1': 10, 'alien_2': 20, 'alien_3': 30}
 ALIEN_STEP = 20
 ALIEN_SIZE = (36, 28)
 
-DESCENT_STEP_Y = 25
-ALIEN_TIMER = 0.025
-FORMATION_VELOCITY = 512
+ALIEN_TIMER = 0.03125
+HORIZONTAL_STEP = 6
+VERTICAL_STEP = 32
+FORMATION_MARGIN = 32

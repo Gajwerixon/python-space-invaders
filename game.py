@@ -63,6 +63,7 @@ class Game:
         self.shield_blocks_group.update(dt)
         self.bullet_group.update(dt)
         self.effect_group.update(dt)
+        self.formation.update(dt)
 
         self.bullet_alien_collision()
         self.bullet_shield_collision()
