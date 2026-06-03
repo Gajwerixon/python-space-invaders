@@ -67,6 +67,7 @@ class Game:
 
         self.bullet_alien_collision()
         self.bullet_shield_collision()
+        self.bullet_miss()
 
     def draw(self):
         """Draw on screen"""
@@ -82,10 +83,10 @@ class Game:
 
         pygame.display.flip()
 
-    def create_bullet(self, pos):
+    def create_bullet(self, pos, dir_y):
         """Create bullet"""
         if not self.bullet_group:
-            Bullet(pos, self, self.bullet_group)
+            Bullet(pos, direction_y = dir_y, groups=self.bullet_group)
 
     def bullet_alien_collision(self):
         """Bullet and alien collision"""
@@ -113,6 +114,17 @@ class Game:
                 bullet.rect.midtop,
                 0.25
             ) 
+
+    def bullet_miss(self):
+        """Check if bullet miss"""
+        for bullet in self.bullet_group:
+            if bullet.rect.top <= PLAY_AREA.top:
+                bullet.kill()
+                self.effect_manager.spawn_bullet_miss_explosion(
+                    self.effects_assets['bullet_miss_fx'],
+                    bullet.rect.midtop,
+                    0.25,
+                )
 
     def load_assets(self):
         """Load assets"""
