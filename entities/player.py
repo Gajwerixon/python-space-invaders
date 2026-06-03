@@ -47,4 +47,4 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
 
         if key[pygame.K_SPACE]:
-            self.game.create_bullet(self.rect.midtop, -1)
+            self.game.create_player_bullet(self.rect.midtop)
