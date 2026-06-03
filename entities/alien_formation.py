@@ -2,12 +2,14 @@ import pygame
 
 from config import *
 from systems import Timer
+from random import choice
 
 class AlienFormation:
     """Alien formation"""
-    def __init__(self, assets, group):
+    def __init__(self, game, assets, group):
         self.assets = assets
         self.alien_group = group
+        self.game = game
 
         self.start_pos = (64, PLAY_AREA.bottom - 400)
         self.formation_list = []
@@ -15,6 +17,7 @@ class AlienFormation:
 
         self.direction = pygame.Vector2(1, 0)
         self.alien_timer = Timer(ALIEN_TIMER)
+        self.shoot_timer = Timer(ALIEN_SHOOT_TIMER)
 
         self.state = 'move_horizontal'
         self.current_alien = 0
@@ -24,6 +27,8 @@ class AlienFormation:
         """Update alien formation"""
         self.alien_timer.update(dt)
         self.update_formation()
+        if not self.game.alien_bullet_group:
+            self.create_bullet()
 
     def draw(self, surface):
         """Draw alien formation"""
@@ -51,6 +56,16 @@ class AlienFormation:
         wall_collision = self.check_wall_collision()
         self.advance_cycle(wall_collision)
         self.alien_timer.start()
+
+    def create_bullet(self):
+        """Alien shoot bullet"""
+        alive_aliens = []
+        for alien in self.formation_list:
+            if alien.alive():
+                alive_aliens.append(alien)
+
+        alien = choice(alive_aliens)
+        self.game.create_alien_bullet(alien.rect.midbottom, alien.bullets_images)
 
     def move_horizontal(self, alien):
         """Move alien horizontal"""
@@ -131,5 +146,5 @@ class Alien(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pos)
         self.pos = pygame.Vector2(self.rect.center)
 
-        self.bullets = bullets
+        self.bullets_images = bullets
         self.score = score
