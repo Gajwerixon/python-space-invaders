@@ -1,6 +1,6 @@
 import pygame
 from config import *
-from systems import Timer
+from systems.timer_system import TimerSystem
 
 class AlienBullet(pygame.sprite.Sprite):
     """Alien Bullet class"""
@@ -14,7 +14,7 @@ class AlienBullet(pygame.sprite.Sprite):
         self.speed = ALIEN_BULLET_SPEED
 
         self.animation_frame = 0
-        self.image_timer = Timer(0.078125)
+        self.image_timer = TimerSystem(0.078125)
         self.image_timer.start()
 
     def update(self, dt):
