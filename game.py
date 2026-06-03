@@ -5,7 +5,8 @@ from config import *
 from level import Level
 from hud import HUD
 from entities.player import Player
-from entities.bullet import Bullet
+from entities.alien_bullet import AlienBullet
+from entities.player_bullet import PlayerBullet
 from entities.effect import EffectManager
 from entities.alien_formation import AlienFormation
 
@@ -30,13 +31,14 @@ class Game:
         # Groups
         self.player_group = pygame.sprite.Group()
         self.shield_blocks_group = pygame.sprite.Group()
-        self.bullet_group = pygame.sprite.Group()
+        self.player_bullet_group = pygame.sprite.Group()
+        self.alien_bullet_group = pygame.sprite.Group()
         self.effect_group = pygame.sprite.Group()
         self.alien_group = pygame.sprite.Group()
         
         # Sprites
         self.player = Player(self, self.player_group)
-        self.formation = AlienFormation(self.aliens_assets, self.alien_group)
+        self.formation = AlienFormation(self, self.aliens_assets, self.alien_group)
 
         # Level, HUD and Effect
         self.level = Level(self.shield_blocks_group)
@@ -61,13 +63,16 @@ class Game:
         """Update game"""
         self.player_group.update(dt)
         self.shield_blocks_group.update(dt)
-        self.bullet_group.update(dt)
+        self.alien_bullet_group.update(dt)
+        self.player_bullet_group.update(dt)
         self.effect_group.update(dt)
         self.formation.update(dt)
 
         self.bullet_alien_collision()
         self.bullet_shield_collision()
-        self.bullet_miss()
+        self.check_player_bullets_outside_play_area()
+        self.check_alien_bullet_outside_play_area()
+        self.check_collision_shield_alien_bullet()
 
     def draw(self):
         """Draw on screen"""
@@ -75,23 +80,24 @@ class Game:
         
         self.player_group.draw(self.surface)
         self.shield_blocks_group.draw(self.surface)
-        self.bullet_group.draw(self.surface)
         self.effect_group.draw(self.surface)
         self.formation.draw(self.surface)
+        self.alien_bullet_group.draw(self.surface)
+        self.player_bullet_group.draw(self.surface)
 
         self.hud.draw_hud(self.surface)
 
         pygame.display.flip()
 
-    def create_bullet(self, pos, dir_y):
+    def create_player_bullet(self, pos):
         """Create bullet"""
-        if not self.bullet_group:
-            Bullet(pos, direction_y = dir_y, groups=self.bullet_group)
+        if not self.player_bullet_group:
+            PlayerBullet(pos, self.player_bullet_group)
 
     def bullet_alien_collision(self):
         """Bullet and alien collision"""
         collision = pygame.sprite.groupcollide(
-            self.bullet_group, 
+            self.player_bullet_group, 
             self.alien_group, 
             True, 
             True
@@ -106,25 +112,61 @@ class Game:
             
     def bullet_shield_collision(self):
         """Bullet and shield collision"""
-        collision = pygame.sprite.groupcollide(self.bullet_group, self.shield_blocks_group, True, True)
+        collision = pygame.sprite.groupcollide(self.player_bullet_group, self.shield_blocks_group, True, True)
         for bullet, shields in collision.items():
             shields[0].damage_shield()
             self.effect_manager.spaw_bullet_shield_explosion(
-                self.effects_assets['bullet_miss_fx'],
+                self.effects_assets['player_bullet_fx'],
                 bullet.rect.midtop,
                 0.25
             ) 
 
-    def bullet_miss(self):
-        """Check if bullet miss"""
-        for bullet in self.bullet_group:
+    def check_player_bullets_outside_play_area(self):
+        """Check if plyaer bullet is outside area"""
+        for bullet in self.player_bullet_group:
             if bullet.rect.top <= PLAY_AREA.top:
                 bullet.kill()
-                self.effect_manager.spawn_bullet_miss_explosion(
-                    self.effects_assets['bullet_miss_fx'],
+                self.effect_manager.spawn_player_bullet_miss_explosion(
+                    self.effects_assets['player_bullet_fx'],
                     bullet.rect.midtop,
                     0.25,
                 )
+
+    def check_alien_bullet_outside_play_area(self):
+        """Check if alien bullet is outside area"""
+        for bullet in self.alien_bullet_group:
+            if bullet.rect.bottom >= PLAY_AREA.bottom:
+                bullet.kill()
+                self.effect_manager.spawn_alien_bullet_miss_explosion(
+                    self.effects_assets['alien_bullet_fx'],
+                    bullet.rect.midbottom,
+                    0.25,
+                )
+
+    def create_alien_bullet(self, pos, images):
+        """Create alien bullet"""
+        AlienBullet(pos, images, self.alien_bullet_group)
+
+    def check_collision_shield_alien_bullet(self):
+        """Check collision between shield and alien bullet"""
+        collision = pygame.sprite.groupcollide(self.alien_bullet_group, self.shield_blocks_group, True, True)
+        for bullet, shields in collision.items():
+            shields[0].damage_shield()
+            self.effect_manager.spaw_bullet_shield_explosion(
+                self.effects_assets['alien_bullet_fx'],
+                bullet.rect.midbottom,
+                0.25
+            ) 
+    
+    def check_collision_player_alien_bullet(self):
+        """Check collision bettwen player and alien bullet"""
+        collision = pygame.sprite.groupcollide(self.player_group, self.alien_bullet_group, True, True)
+        for player, bullets in collision.items():
+            self.effect_manager.spaw_bullet_shield_explosion(
+                self.effects_assets['alien_bullet_fx'],
+                player.rect.center,
+                0.25
+            ) 
 
     def load_assets(self):
         """Load assets"""
@@ -135,16 +177,25 @@ class Game:
             for folder in alien.iterdir():
                 aliens[alien.name][folder.name] = []              
                 for img in folder.iterdir():
-                    aliens[alien.name][folder.name].append(pygame.transform.scale(
-                        pygame.image.load(img), ALIEN_SIZE))
+                    no_bg_img = pygame.image.load(img).convert()
+                    no_bg_img.set_colorkey((0, 0, 0))
+                    if folder.name == 'bullets': 
+                        ready_img = pygame.transform.scale(no_bg_img, BULLET_SIZE)
+                    else: 
+                        ready_img = pygame.transform.scale(no_bg_img, ALIEN_SIZE)
+
+                    aliens[alien.name][folder.name].append(ready_img)
 
         effects = {
-            'bullet_miss_fx': pygame.transform.scale(
-                pygame.image.load('assets/entities/effect/bullet_miss_fx.png'), 
-                MISS_EXPLOSION_FX_SIZE),
+            'player_bullet_fx': pygame.transform.scale(
+                pygame.image.load('assets/entities/effect/player_bullet_fx.png'), 
+                MISS_EXPLOSION_FX_SIZE).convert_alpha(),
+            'alien_bullet_fx': pygame.transform.scale(
+                pygame.image.load('assets/entities/effect/alien_bullet_fx.png'), 
+                MISS_ALIEN_EXPLOSION_FX_SIZE).convert_alpha(), 
             'alien_explosion_fx': pygame.transform.scale(
                 pygame.image.load('assets/entities/effect/alien_explosion_fx.png'), 
-                ALIEN_EXPLOSION_FX_SIZE),
+                ALIEN_EXPLOSION_FX_SIZE).convert_alpha(),
         }
                     
         return aliens, effects                                                  
