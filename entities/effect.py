@@ -14,9 +14,13 @@ class EffectManager:
         """Spawn explosion effect between bullet and shield"""
         Effect(image, pos, duration, self.group)
 
-    def spawn_bullet_miss_explosion(self, image, pos, duration):
+    def spawn_player_bullet_miss_explosion(self, image, pos, duration):
         """Spaw explosion effect after bullet miss"""
         Effect(image, pos, duration, self.group, anchor='midtop')
+
+    def spawn_alien_bullet_miss_explosion(self, image, pos, duration):
+        """Spawn explosion effect after alien bullet miss"""
+        Effect(image, pos, duration, self.group, anchor='midbottom')
 
 class Effect(pygame.sprite.Sprite):
     """Effect class"""
