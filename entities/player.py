@@ -1,13 +1,12 @@
 import pygame
 
 from config import *
+from entities.player_bullet import PlayerBullet
 
 class Player(pygame.sprite.Sprite):
     """Player class"""
-    def __init__(self, game, groups):
+    def __init__(self, player_bullets_group, groups):
         super().__init__(groups)
-        self.game = game
-
         self.image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, PLAYER_SIZE)
         self.rect = self.image.get_rect(midbottom=(PLAY_AREA.centerx, PLAY_AREA.bottom - 60))
@@ -15,6 +14,8 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.Vector2()
         self.speed = PLAYER_SPEED
+
+        self.bullets = player_bullets_group
     
     def update(self, dt):
         """Update player"""
@@ -46,5 +47,5 @@ class Player(pygame.sprite.Sprite):
         elif not (key[pygame.K_LEFT] or key[pygame.K_a] or key[pygame.K_RIGHT] or key[pygame.K_d]):
             self.direction.x = 0
 
-        if key[pygame.K_SPACE]:
-            self.game.create_player_bullet(self.rect.midtop)
+        if key[pygame.K_SPACE] and len(self.bullets) <= 0:
+            PlayerBullet(self.rect.midtop, self.bullets)
