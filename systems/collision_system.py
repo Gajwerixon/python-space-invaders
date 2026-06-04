@@ -58,7 +58,7 @@ class CollisionSystem:
             shields[0].damage_shield()
             self.effect_system.spaw_bullet_shield_explosion(
                 bullet.rect.midtop,
-                0.25
+                0.1
             ) 
 
     def alien_bullet_outside_play_area(self):
@@ -75,14 +75,18 @@ class CollisionSystem:
         """Alien bullet and player collision"""
         collision = pygame.sprite.groupcollide(self.player, self.alien_bullets, True, True)
         for player, _ in collision.items():
-            print('yes')
+            self.effect_system.spawn_player_explosion(
+                player.rect.center,
+                1.5,
+                0.125,
+            )
 
     def alien_bullet_shield_collision(self):
         """Alien bullet and shield collision"""
-        collision = pygame.sprite.groupcollide(self.aliens, self.shield_blocks, True, True)
+        collision = pygame.sprite.groupcollide(self.alien_bullets, self.shield_blocks, True, True)
         for bullet, shields in collision.items():
             shields[0].damage_shield()
-            self.effect_system.spaw_bullet_shield_explosion(
+            self.effect_system.spawn_alien_bullet_shield_explosion(
                 bullet.rect.midbottom,
-                0.25
+                0.1
             )
