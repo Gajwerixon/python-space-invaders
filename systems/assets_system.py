@@ -34,6 +34,11 @@ class AssetsSystem:
             'player_bullet_fx': pygame.transform.scale(
                 pygame.image.load('assets/entities/effect/player/player_bullet_fx.png'), 
                 MISS_EXPLOSION_FX_SIZE).convert_alpha(),
+            'player_explosion': [pygame.transform.scale(
+                pygame.image.load('assets/entities/effect/player/player_explosion_0.png'), 
+                PLAYER_SIZE).convert_alpha(), pygame.transform.scale(
+                pygame.image.load('assets/entities/effect/player/player_explosion_1.png'), 
+                PLAYER_SIZE).convert_alpha()],
             'alien_bullet_fx': pygame.transform.scale(
                 pygame.image.load('assets/entities/effect/alien/alien_bullet_fx.png'), 
                 MISS_ALIEN_EXPLOSION_FX_SIZE).convert_alpha(), 
