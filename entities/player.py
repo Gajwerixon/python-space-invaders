@@ -5,10 +5,9 @@ from entities.player_bullet import PlayerBullet
 
 class Player(pygame.sprite.Sprite):
     """Player class"""
-    def __init__(self, player_bullets_group, groups):
+    def __init__(self, image, player_bullets_group, groups):
         super().__init__(groups)
-        self.image = pygame.image.load('assets/entities/player/player.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, PLAYER_SIZE)
+        self.image = image
         self.rect = self.image.get_rect(midbottom=(PLAY_AREA.centerx, PLAY_AREA.bottom - 60))
         self.pos = pygame.Vector2(self.rect.center)
 
