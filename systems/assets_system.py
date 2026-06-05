@@ -8,6 +8,8 @@ class AssetsSystem:
     def __init__(self):
         self.aliens = self.load_alien_assets()
         self.effects = self.load_effects_assets()
+        self.player = self.load_player_assets()
+        self.font = self.load_font_assets()
 
     def load_alien_assets(self):
         """Load alien assets"""
@@ -47,3 +49,21 @@ class AssetsSystem:
                 ALIEN_EXPLOSION_FX_SIZE).convert_alpha(),
         }
         return effects
+    
+    def load_player_assets(self):
+        """Load player assets"""
+        player_assets = {
+            'player_img': pygame.transform.scale(
+                pygame.image.load('assets/entities/player/player.png').convert_alpha(),
+                PLAYER_SIZE
+            ),
+            'player_img_hud': pygame.transform.scale(
+                pygame.image.load('assets/entities/player/player.png').convert_alpha(),
+                SHIP_IMG_SIZE
+            ),
+        }
+        return player_assets
+    
+    def load_font_assets(self):
+        """Load font assets"""
+        return pygame.font.Font('assets/fonts/font.ttf', FONT_SIZE)
