@@ -9,8 +9,9 @@ from systems.assets_system import AssetsSystem
 from systems.effect_system import EffectSystem
 from systems.collision_system import CollisionSystem
 
-from game.level import Level
+from ui.menu import Menu
 from ui.hud import HUD
+from game.level import Level
 
 class Game:
     """Game class"""
@@ -21,16 +22,19 @@ class Game:
         self.running = True
 
         # Game variables
-        self.mode = 'PLAYING'
+        self.mode = 'MENU'
         self.lives = 3
         self.credit = 0
-        self.score = 0
+        self.score_1 = 0
+        self.score_2 = 0
         self.high_score = 0
 
         # Assets
         self.assets = AssetsSystem()
         self.aliens_assets = self.assets.aliens
         self.effects_assets = self.assets.effects
+        self.player_assets = self.assets.player
+        self.font_assets = self.assets.font
 
         # Groups
         self.player_group = pygame.sprite.Group()
@@ -41,7 +45,7 @@ class Game:
         self.aliens_group = pygame.sprite.Group()
         
         # Sprites
-        self.player = Player(self.player_bullets_group, self.player_group)
+        self.player = Player(self.player_assets['player_img'], self.player_bullets_group, self.player_group)
 
         # Systems
         self.aliens_system = AliensSystem(self.aliens_assets, self.alien_bullets_group, self.aliens_group)
@@ -54,8 +58,9 @@ class Game:
                                                 self.effect_system)
 
         # Level and HUD
+        self.hud = HUD(self.player_assets['player_img_hud'], self.font_assets)
+        self.menu = Menu(self.font_assets)
         self.level = Level(self.shield_blocks_group)
-        self.hud = HUD(self)
 
     def run(self):
         """Main game loop"""
@@ -70,29 +75,44 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if self.mode == 'MENU':
+                self.menu.handle_events(event)
 
     def update(self, dt):
         """Update game"""
-        self.player_group.update(dt)
-        self.shield_blocks_group.update(dt)
-        self.alien_bullets_group.update(dt)
-        self.player_bullets_group.update(dt)
-        self.effects_group.update(dt)
+        if self.mode == 'PLAYING':
+            self.player_group.update(dt)
+            self.shield_blocks_group.update(dt)
+            self.alien_bullets_group.update(dt)
+            self.player_bullets_group.update(dt)
+            self.effects_group.update(dt)
 
-        self.aliens_system.update(dt)
-        self.collision_system.update()
+            self.aliens_system.update(dt)
+            self.collision_system.update()
+
+        if self.mode == 'MENU':
+            self.menu.update(dt)
+            if self.menu.start_game:
+                self.menu.start_game = False
+                self.num_players = self.menu.get_num_players
+                self.mode = 'PLAYING'
 
     def draw(self):
         """Draw on screen"""
         self.surface.fill('black')
         
-        self.alien_bullets_group.draw(self.surface)
-        self.player_bullets_group.draw(self.surface)
-        self.shield_blocks_group.draw(self.surface)
-        self.player_group.draw(self.surface)
-        self.aliens_group.draw(self.surface)
-        self.effects_group.draw(self.surface)
+        if self.mode == 'PLAYING':
+            self.alien_bullets_group.draw(self.surface)
+            self.player_bullets_group.draw(self.surface)
+            self.shield_blocks_group.draw(self.surface)
+            self.player_group.draw(self.surface)
+            self.aliens_group.draw(self.surface)
+            self.effects_group.draw(self.surface)
 
-        self.hud.draw_hud(self.surface)
+        self.hud.draw_hud(self.score_1, self.score_2, self.high_score, 
+                          self.lives, self.credit, self.surface)
+        
+        if self.mode == 'MENU':
+            self.menu.draw(self.surface)
 
-        pygame.display.flip()                                           
+        pygame.display.flip()
