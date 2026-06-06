@@ -76,7 +76,7 @@ NUM_ALIENS = 11
 ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_2', 'alien_2', 'alien_3')
 ALIEN_SCORE = {'alien_1': 10, 'alien_2': 20, 'alien_3': 30}
 ALIEN_STEP = 20
-ALIEN_SIZE = (36, 28)
+ALIEN_SIZE = (32, 24)
 ALIEN_SHOOT_TIMER = 0.875
 
 ALIEN_TIMER = 0.03125
