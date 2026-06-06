@@ -8,7 +8,7 @@ class Menu:
     def __init__(self, font):
         self.font = font
 
-        self.start_game = False
+        self.selection_confirmed = False
         self.player_options = [
             {"players": 1,
              "menu_index": 1},
@@ -43,7 +43,7 @@ class Menu:
                 elif event.key == pygame.K_UP and self.selected_option != 0:
                     self.selected_option = 0
                 elif event.key == pygame.K_RETURN:
-                    self.start_game = True
+                    self.selection_confirmed = True
 
     def update(self, dt):
         """Update menu"""
