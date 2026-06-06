@@ -11,6 +11,7 @@ from systems.collision_system import CollisionSystem
 
 from ui.menu import Menu
 from ui.hud import HUD
+from ui.advance_table import AdvanceTable
 from game.level import Level
 
 class Game:
@@ -22,7 +23,7 @@ class Game:
         self.running = True
 
         # Game variables
-        self.mode = 'MENU'
+        self.mode = 'ADVANCE_TABLE'
         self.lives = 3
         self.credit = 0
         self.score_1 = 0
@@ -31,10 +32,6 @@ class Game:
 
         # Assets
         self.assets = AssetsSystem()
-        self.aliens_assets = self.assets.aliens
-        self.effects_assets = self.assets.effects
-        self.player_assets = self.assets.player
-        self.font_assets = self.assets.font
 
         # Groups
         self.player_group = pygame.sprite.Group()
@@ -45,11 +42,11 @@ class Game:
         self.aliens_group = pygame.sprite.Group()
         
         # Sprites
-        self.player = Player(self.player_assets['player_img'], self.player_bullets_group, self.player_group)
+        self.player = Player(self.assets.player['player_img'], self.player_bullets_group, self.player_group)
 
         # Systems
-        self.aliens_system = AliensSystem(self.aliens_assets, self.alien_bullets_group, self.aliens_group)
-        self.effect_system = EffectSystem(self.effects_assets, self.effects_group)
+        self.aliens_system = AliensSystem(self.assets.aliens, self.alien_bullets_group, self.aliens_group)
+        self.effect_system = EffectSystem(self.assets.effects, self.effects_group)
         self.collision_system = CollisionSystem(self.player_group,
                                                 self.shield_blocks_group,
                                                 self.player_bullets_group,
@@ -57,9 +54,10 @@ class Game:
                                                 self.aliens_group,
                                                 self.effect_system)
 
-        # Level and HUD
-        self.hud = HUD(self.player_assets['player_img_hud'], self.font_assets)
-        self.menu = Menu(self.font_assets)
+        # UI and Level
+        self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font)
+        self.menu = Menu(self.assets.font)
+        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo)
         self.level = Level(self.shield_blocks_group)
 
     def run(self):
@@ -77,9 +75,24 @@ class Game:
                 self.running = False
             if self.mode == 'MENU':
                 self.menu.handle_events(event)
+            if self.mode == 'ADVANCE_TABLE':
+                self.advance_table.handle_events(event)
 
     def update(self, dt):
         """Update game"""
+        if self.mode == 'MENU':
+            self.menu.update(dt)
+            if self.menu.selection_confirmed:
+                self.menu.selection_confirmed = False
+                self.num_players = self.menu.get_num_players
+                self.mode = 'ADVANCE_TABLE'
+        
+        if self.mode == 'ADVANCE_TABLE':
+            self.advance_table.update(dt)
+            if self.advance_table.start_game:
+                self.advance_table.start_game = False
+                self.mode = 'PLAYING'
+
         if self.mode == 'PLAYING':
             self.player_group.update(dt)
             self.shield_blocks_group.update(dt)
@@ -90,16 +103,15 @@ class Game:
             self.aliens_system.update(dt)
             self.collision_system.update()
 
-        if self.mode == 'MENU':
-            self.menu.update(dt)
-            if self.menu.start_game:
-                self.menu.start_game = False
-                self.num_players = self.menu.get_num_players
-                self.mode = 'PLAYING'
-
     def draw(self):
         """Draw on screen"""
         self.surface.fill('black')
+
+        if self.mode == 'MENU':
+            self.menu.draw(self.surface)
+        
+        if self.mode == 'ADVANCE_TABLE':
+            self.advance_table.draw(self.surface)
         
         if self.mode == 'PLAYING':
             self.alien_bullets_group.draw(self.surface)
@@ -110,9 +122,6 @@ class Game:
             self.effects_group.draw(self.surface)
 
         self.hud.draw_hud(self.score_1, self.score_2, self.high_score, 
-                          self.lives, self.credit, self.surface)
-        
-        if self.mode == 'MENU':
-            self.menu.draw(self.surface)
+                        self.lives, self.credit, self.surface)
 
         pygame.display.flip()
