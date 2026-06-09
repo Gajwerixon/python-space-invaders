@@ -1,5 +1,3 @@
-import pygame
-
 from config import *
 
 class HUD:
@@ -10,68 +8,40 @@ class HUD:
 
     def draw_hud(self, score_1, score_2, high_score, lives, credit, surface):
         """Draw HUD"""
-        self.draw_top_hud(surface, score_1, score_2, high_score)
-        self.draw_bottom_hud(surface, lives, credit)
+        self.draw_top_hud(score_1, score_2, high_score, surface)
+        self.draw_bottom_hud(lives, credit, surface)
 
-    def draw_top_hud(self, surface, score_1, score_2, high_score):
+    def draw_top_hud(self, score_1, score_2, high_score, surface):
         """Draw top hud"""
-        self.draw_score_1(surface, score_1)
-        self.draw_high_score(surface, high_score)
-        self.draw_score_2(surface, score_2)
+        self.draw_score(score_1, 'S C O R E < 1 >', 
+                        (TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y), 
+                        'topleft', surface)
+        self.draw_score(high_score, 'H I - S C O R E', 
+                        (WIDTH // 2, TOP_HUD_MARGIN_Y), 
+                        'midtop', surface)
+        self.draw_score(score_2, 'S C O R E < 2 >', 
+                        (WIDTH - TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y), 
+                        'topright', surface)
 
-    def draw_score_1(self, surface, score_1):
-        """Draw player_1 score"""
-        # Text
-        text_surface = self.font.render('S C O R E < 1 >', True, 'white')
-        text_rect = text_surface.get_rect(topleft = (TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y))
-        surface.blit(text_surface, text_rect)
-
-        # Score
-        text_rect_pos_x = text_rect.centerx 
-        text_rect_pos_y = text_rect.bottom  
-        score_surface = self.font.render(f'{score_1:04d}', True, 'white')
-        score_rect = score_surface.get_rect(midtop = (text_rect_pos_x, text_rect_pos_y + TEXT_SCORE_PADDING))
-        surface.blit(score_surface, score_rect)
-
-    def draw_high_score(self, surface, high_score):
-        """Draw high score"""
-        # Text
-        text_surface = self.font.render('H I - S C O R E', True, 'white')
-        text_rect = text_surface.get_rect(midtop = (WIDTH // 2, TOP_HUD_MARGIN_Y))
-        surface.blit(text_surface, text_rect)
-
-        # Score
-        text_rect_pos_x = text_rect.centerx 
-        text_rect_pos_y = text_rect.bottom  
-        score_surface = self.font.render(f'{high_score:04d}', True, 'white')
-        score_rect = score_surface.get_rect(midtop = (text_rect_pos_x, text_rect_pos_y + TEXT_SCORE_PADDING))
-        surface.blit(score_surface, score_rect)
-
-    def draw_score_2(self, surface, score_2):
-        """Draw player_2 score"""
-        # Text
-        text_surface = self.font.render('S C O R E < 2 >', True, 'white')
-        text_rect = text_surface.get_rect(topright = (WIDTH - TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y))
-        surface.blit(text_surface, text_rect)
-
-        # Score
-        text_rect_pos_x = text_rect.centerx 
-        text_rect_pos_y = text_rect.bottom  
-        score_surface = self.font.render(f'{score_2:04d}', True, 'white')
-        score_rect = score_surface.get_rect(midtop = (text_rect_pos_x, text_rect_pos_y + TEXT_SCORE_PADDING))
-        surface.blit(score_surface, score_rect)
-
-    def draw_bottom_hud(self, surface, lives, credits):
+    def draw_bottom_hud(self, lives, credits, surface):
         """Draw bottom hud"""
         self.draw_lives(surface, lives)
         self.draw_credit(surface, credits)
 
+    def draw_score(self, label, text, pos, anchor, surface):
+        """Draw score"""
+        text_rect = self.blit_text(surface, text, pos, anchor)
+        
+        self.blit_text(surface, f'{label:04d}', 
+                       (text_rect.centerx, text_rect.bottom + TEXT_SCORE_PADDING),
+                       anchor='midtop')
+
     def draw_lives(self, surface, lives):
         """Draw lives"""
-        text_surface = self.font.render(f'{lives}', True, 'white')
-        text_rect = text_surface.get_rect(topleft = (BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y))
-        surface.blit(text_surface, text_rect)
-
+        text_rect = self.blit_text(surface, str(lives), 
+                       (BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y),
+                       'topleft')
+        
         x, y = text_rect.topright
         x_start = x + 35
         
@@ -81,7 +51,16 @@ class HUD:
 
     def draw_credit(self, surface, credits):
         """Draw credit"""
-        text_surface_1 = self.font.render(f'C R E D I T    {credits:02d}', True, 'white')
-        text_rect_1 = text_surface_1.get_rect(topright = (WIDTH - BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y))
-        surface.blit(text_surface_1, text_rect_1)
+        pos = (WIDTH - BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y)
+        self.blit_text(surface, f'C R E D I T    {credits:02d}', pos, 'topright')
 
+    def blit_text(self, surface, text, pos, anchor='center'):
+        """Blit text and return rect postion"""
+        surf = self.render_text(text)
+        rect = surf.get_rect(**{anchor: pos})
+        surface.blit(surf, rect)
+        return rect
+
+    def render_text(self, text):
+        """Render text"""
+        return self.font.render(text, True, 'white')
