@@ -22,7 +22,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.mode = 'MENU'
+        self.mode = 'ADVANCE_TABLE'
         self.lives = 3
         self.credit = 0
         self.score_1 = 0
