@@ -2,6 +2,7 @@ import pygame
 
 from config import *
 from systems.timer_system import TimerSystem
+from ui.animated_text import AnimatedText
 
 class AdvanceTable:
     """Advance table class"""
@@ -10,165 +11,124 @@ class AdvanceTable:
         self.alien = alien_assets
         self.ufo = ufo_assets
 
-        self.start_game = False
-        self.animation_done = True
-        self.animation_2_done = False
-
-        self.animated_elements = [
-            {
-                'text': 'P L A Y',
-                'current_text': '',
-                'index': 0,
-                'pos': (WIDTH / 2 - 45, 200),
-                'anchor': 'topleft',
-                'done': True,
-            },
-            {
-                'text': 'S P A C E       I N V A D E R S',
-                'current_text': '',
-                'index': 0,
-                'pos': (WIDTH / 2 - 175, 280),
-                'anchor': 'topleft',
-                'done': True,
-            }
-        ]
-
-        self.static_elements = [
-            {
-                'text': '* S C O R E     A D V A N C E     T A B L E *',
-                'pos': (WIDTH / 2, 380),
-                'anchor': 'center',
-                'type': 'text'
-            },
-            {
-                'img': self.ufo,
-                'pos': (WIDTH / 2 - 100, 430),
-                'type': 'img'
-            },
-            {
-                'img': self.alien['alien_3']['images'][1],
-                'pos': (WIDTH / 2 - 100, 480),
-                'type': 'img'
-            },
-            {
-                'img': self.alien['alien_2']['images'][0],
-                'pos': (WIDTH / 2 - 100, 530),
-                'type': 'img'
-            },
-            {
-                'img': self.alien['alien_1']['images'][1],
-                'pos': (WIDTH / 2 - 100, 580),
-                'type': 'img'
-            }
-        ]
-
-        self.score_elements = [
-            {
-                'text': '= ?    M Y S T E R Y',
-                'current_text': '',
-                'pos': (WIDTH / 2 - 70, 415),
-                'index': 0,
-                'anchor': 'topleft',
-                'done': False
-            },
-            {
-                'text': '= 3 0     P O I N T S',
-                'current_text': '',
-                'pos': (WIDTH / 2 - 70, 465),
-                'index': 0,
-                'anchor': 'topleft',
-                'done': False
-            },
-            {
-                'text': '= 2 0     P O I N T S',
-                'current_text': '',
-                'pos': (WIDTH / 2 - 70, 515),
-                'index': 0,
-                'anchor': 'topleft',
-                'done': False
-            },
-            {
-                'text': '=  1 0     P O I N T S',
-                'current_text': '',
-                'pos': (WIDTH / 2 - 70, 565),
-                'index': 0,
-                'anchor': 'topleft',
-                'done': False
-            }
-        ]
+        self.phase = 'INTRO'
+        self.continue_to_game = False
 
         self.letter_timer = TimerSystem(LETTER_TIMER)
-        self.static_elements_timer = TimerSystem(0.75)
-        self.start_game_timer = TimerSystem(0.75)
-        self.static_elements_timer.active = True
+        self.transition_timer = TimerSystem(ADVANCE_TABLE_TRANSITION_TIMER)
+
+        self.intro_text = [ 
+            AnimatedText('P L A Y', (WIDTH / 2 - 45, 200)),
+            AnimatedText('S P A C E       I N V A D E R S', (WIDTH / 2 - 175, 280))
+        ]
+
+        self.score_text = [
+            AnimatedText('= ?    M Y S T E R Y', (WIDTH / 2 - 70, 415)),
+            AnimatedText('= 3 0     P O I N T S', (WIDTH / 2 - 70, 465)),
+            AnimatedText('= 2 0     P O I N T S', (WIDTH / 2 - 70, 515)),
+            AnimatedText('=  1 0     P O I N T S', (WIDTH / 2 - 70, 565))
+        ]
+
+        self.score_table_header = (
+            '* S C O R E     A D V A N C E     T A B L E *',
+            (WIDTH / 2, 380)
+        )
+
+        self.aliens_images = [
+            (self.ufo, (WIDTH / 2 - 100, 430)),
+            (self.alien['alien_3']['images'][1], (WIDTH / 2 - 100, 480)),
+            (self.alien['alien_2']['images'][0], (WIDTH / 2 - 100, 530)),
+            (self.alien['alien_1']['images'][1], (WIDTH / 2 - 100, 580)),
+        ]
     
     def handle_events(self, event):
-        """Handle advance table events"""
-        ...
+        """Handle events"""
+        pass
 
     def update(self, dt):
         """Update advance table"""
         self.letter_timer.update(dt)
-        self.static_elements_timer.update(dt)
-        self.start_game_timer.update(dt)
-        if self.animation_2_done and not self.start_game_timer.active:
-            self.start_game = True
+        self.transition_timer.update(dt)
+
+        if self.phase == 'INTRO':
+            self.update_intro()
+
+        elif self.phase == 'TRANSITION':
+            self.update_transition()
+
+        elif self.phase == 'SCORE_TABLE':
+            self.update_score()
+        
+        elif self.phase == 'FINISHED':
+            self.update_finished()
 
     def draw(self, surface):
         """Draw advance table"""
-        for element in self.animated_elements:
-            if element['done']:
-                self.draw_static_element(element['text'], element['pos'], surface, anchor=element['anchor'])
-                continue
+        self.draw_text_elements(self.intro_text, surface)
 
-            if element['index'] >= len(element['text']):
-                element['done'] = True
+        if self.phase in ('SCORE_TABLE', 'FINISHED'):
+            self.draw_score_table(surface)
 
-                if all(element['done'] for element in self.animated_elements):
-                    if not self.animation_done:
-                        self.static_elements_timer.start()
-                        self.animation_done = True
-            
-            self.draw_animated_element(element, surface)
+    def update_intro(self):
+        """Update INTRO phase"""
+        self.update_animated_elements(self.intro_text)
+        if all(element.done for element in self.intro_text):
+            self.phase = 'TRANSITION'
+            self.transition_timer.start()
+
+    def update_transition(self):
+        """Update TRANSITION phase"""
+        if not self.transition_timer.active:
+            self.phase = 'SCORE_TABLE'
+
+    def update_score(self):
+        """Update SCORE phase"""
+        self.update_animated_elements(self.score_text)
+        if all(element.done for element in self.score_text):
+            self.phase = 'FINISHED'
+            self.transition_timer.start()
+
+    def update_finished(self):
+        """Update FINISHED phase"""
+        if not self.transition_timer.active:
+            self.continue_to_game = True
+
+    def update_animated_elements(self, elements):
+        """Update animated elements"""
+        if not self.letter_timer.active:
+            for element in elements:
+                if not element.done:
+                    element.update()
+                    self.letter_timer.start()
+                    break
+
+    def draw_score_table(self, surface):
+        """Draw SCORE_TABLE"""
+        text, pos = self.score_table_header
+        self.blit_text(text, pos, surface)
         
-        if self.animation_done and not self.static_elements_timer.active:
-            for element in self.static_elements:
-                if element['type'] == 'img':
-                    self.draw_image_element(element['img'], element['pos'], surface)
-                else:
-                    self.draw_static_element(element['text'], element['pos'], surface, anchor=element['anchor'])
-            
-            for element in self.score_elements:
-                if element['done']:
-                    self.draw_static_element(element['text'], element['pos'], surface, anchor=element['anchor'])
-                    continue
+        for img, pos in self.aliens_images:
+            self.blit_img(img, pos, surface)
 
-                if element['index'] >= len(element['text']):
-                    element['done'] = True
-                    if not self.animation_2_done:
-                        if all(item['done'] for item in self.score_elements):
-                            self.animation_2_done = True
-                            self.start_game_timer.start()
-            
-                self.draw_animated_element(element, surface)
+        self.draw_text_elements(self.score_text, surface)
 
-    def draw_static_element(self, text, pos, surface, anchor='center'):
-        """Draw static element"""
+    def draw_text_elements(self, elements, surface):
+        """Draw text elements"""
+        for element in elements:
+            self.blit_text(
+                element.display_text,
+                element.pos,
+                surface,
+                element.anchor
+            )
+
+    def blit_text(self, text, pos, surface, anchor='center'):
+        """Blit text on the surface"""
         element_surface = self.font.render(text, True, 'white')
         element_rect = element_surface.get_rect(**{anchor: pos})
         surface.blit(element_surface, element_rect)
 
-    def draw_image_element(self, img, pos, surface):
-        """Draw image element"""
+    def blit_img(self, img, pos, surface):
+        """Blit image on the surface"""
         image_rect = img.get_rect(center=pos)
         surface.blit(img, image_rect)
-
-    def draw_animated_element(self, item, surface):
-        """Draw text letter by letter"""
-        if not self.letter_timer.active:
-            item['current_text'] += item['text'][item['index']]
-            item['index'] += 1
-
-            self.letter_timer.start()
-
-        self.draw_static_element(item['current_text'], item['pos'], surface, anchor='topleft')
