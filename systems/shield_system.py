@@ -8,7 +8,7 @@ class ShieldSystem:
 
     def create_shield_blocks(self):
         """Create shields blocks"""
-        start_pos = (100, PLAY_AREA.bottom - 200)
+        start_pos = (80, PLAY_AREA.bottom - 150)
 
         for shield in range(NUM_SHIELDS):
             for current_col, shield_row in enumerate(SHIELD_SHAPE):
