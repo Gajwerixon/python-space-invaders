@@ -10,8 +10,8 @@ FONT_SIZE = 25
 # TOP HUD (rules) 
 TOP_HUD_HEIGHT = 130
 TOP_HUD_MARGIN_X = 30
-TOP_HUD_MARGIN_Y = 30
-TEXT_SCORE_PADDING = 14
+TOP_HUD_MARGIN_Y = 20
+TEXT_SCORE_PADDING = 10
 
 # BOTTOM HUD (rules)
 BOTTOM_HUD_HEIGHT = 60
@@ -32,7 +32,7 @@ PLAY_AREA = pygame.Rect(
 )
 
 # PLAYER
-PLAYER_SIZE = (36, 24)
+PLAYER_SIZE = (32, 22)
 PLAYER_SPEED = 150
 
 # SHIELD
@@ -53,9 +53,13 @@ SHIELD_SHAPE = [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 
                 [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
                 [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
 ]
-SHIELD_BLOCK_SIZE = (4, 4)
-SPACE_BETWEEN = 150
+SHIELD_BLOCK_SIZE = (3, 3)
+SPACE_BETWEEN = 144
 NUM_SHIELDS = 4
+
+# Line
+NUM_LINES = 224
+LINE_SIZE = (3, 3)
 
 # Bullet
 PLAYER_BULLET_SIZE = (2, 10)
@@ -75,8 +79,8 @@ MISS_ALIEN_EXPLOSION_FX_SIZE = (18, 32)
 NUM_ALIENS = 11
 ALIENS_SETUP = ('alien_1', 'alien_1', 'alien_2', 'alien_2', 'alien_3')
 ALIEN_SCORE = {'alien_1': 10, 'alien_2': 20, 'alien_3': 30}
-ALIEN_STEP = 20
-ALIEN_SIZE = (32, 24)
+ALIEN_STEP = 18
+ALIEN_SIZE = (30, 22)
 ALIEN_SHOOT_TIMER = 0.875
 
 ALIEN_TIMER = 0.03125
@@ -86,3 +90,6 @@ FORMATION_MARGIN = 32
 
 # Menu
 LETTER_TIMER = 0.0625
+
+# Advance Table
+ADVANCE_TABLE_TRANSITION_TIMER = 0.75
