@@ -15,7 +15,11 @@ class Level:
         self.assets = assets
 
         self.phase = 'START'
-        self.player_timer = TimerSystem(1.5)
+        self.spawn_player_timer = TimerSystem(1.75)
+
+        self.lives = 3
+        self.score_1 = 0
+        self.score_2 = 0
 
         self.player = None
         self.shield_system = ShieldSystem(self.groups['shields'])
@@ -33,76 +37,88 @@ class Level:
 
         self.initialize_level()
 
-        """
-        'START' -> load (shields, lines, aliens) [allow alines to move not shoot] {f_start} ->
-        wait 1 secound... ->
-        load spawn player + [allow aliens to shoot] {f_}
-        ->
-        """
-
     def handle_events(self, event):
-        """Handle level events"""
+        """Handle LEVEL events"""
         pass
 
     def update(self, dt):
-        """Update level"""
-        self.player_timer.update(dt)
+        """Update LEVEL"""
+        self.spawn_player_timer.update(dt)
 
         if self.phase == 'START':
-            self.aliens_system.update(dt)
+            self.update_start(dt)
 
-            if not self.player_timer.active:
-                self.start_playing()
-                self.phase = 'PLAYING'
-
-        elif self.phase == 'PLAYING':
-            self.aliens_system.update(dt)
-            self.collision_system.update()
-
-            for name, group in self.groups.items():
-                if name == 'aliens':
-                    continue
-                group.update(dt)
-
-            for event in self.collision_system.events:
-                if event == "PLAYER_DEAD":
-                    self.phase = "RESET"
-                    self.player_timer.start()
+        elif self.phase == 'GAMEPLAY':
+            self.update_gameplay(dt)
 
         elif self.phase == 'RESET':
-            for name, group in self.groups.items():
-                if name == 'aliens':
-                    continue
-                group.update(dt)
+            self.update_reset(dt)
 
-            self.collision_system.events = []
-            if not self.player_timer.active:
-                self.player = Player(
-                    self.assets.player['player_img'], 
-                    self.groups['player_bullets'], 
-                    self.groups['player']
-                )
-                self.phase = 'PLAYING'
+        elif self.phase == 'GAME_OVER':
+            return
 
     def draw(self, surface):
-        """Draw level"""
+        """Draw LEVEL"""
         for group in self.groups.values():
             group.draw(surface)
 
+    def update_start(self, dt):
+        """Update START phase"""
+        self.aliens_system.update(dt)
+
+        if not self.spawn_player_timer.active:
+            self.spawn_player()
+            self.aliens_system.shooting_enabled = True
+            self.phase = 'GAMEPLAY'
+
+    def update_gameplay(self, dt):
+        """Update GAMEPLAY phase"""
+        self.aliens_system.update(dt)
+        self.collision_system.update()
+        self.update_groups(dt)
+
+        for event in self.collision_system.events:
+            if event == "PLAYER_DEAD":
+                self.handle_player_dead()
+
+    def update_reset(self, dt):
+        """Update RESET phase"""
+        self.update_groups(dt)
+
+        self.collision_system.events = []
+
+        if not self.spawn_player_timer.active:
+            self.spawn_player()
+            self.phase = 'GAMEPLAY'
+
+    def update_groups(self, dt):
+        """Update groups except aliens_group"""
+        for name, group in self.groups.items():
+            if name == 'aliens':
+                continue
+            group.update(dt)
+
+    def handle_player_dead(self):
+        """Handle 'Player_dead' event"""
+        self.lives -= 1
+        if self.lives > 0: 
+            self.phase = "RESET"
+            self.spawn_player_timer.start()
+        else:
+            self.phase = 'GAME_OVER'
+
+    def spawn_player(self):
+        """Spawn player"""
+        self.player = Player(
+                self.assets.player['player_img'], 
+                self.groups['player_bullets'], 
+                self.groups['player']
+            )
+
     def initialize_level(self):
-        """Initialize new level"""
+        """Initialize level"""
         self.shield_system.create_shield_blocks()
         self.line_system.create_line_blocks()
         self.aliens_system.create_alien_formation()
 
-        self.player_timer.start()
-
-    def start_playing(self):
-        """START -> PLAYING"""
-        self.player = Player(
-                    self.assets.player['player_img'], 
-                    self.groups['player_bullets'], 
-                    self.groups['player']
-                )
-
-        self.aliens_system.shooting_enabled = True
+        self.spawn_player_timer.start()
