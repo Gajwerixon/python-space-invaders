@@ -10,14 +10,13 @@ from systems.timer_system import TimerSystem
 
 class AliensSystem:
     """Alien system"""
-    def __init__(self, assets, aliens_bullet_group, aliens_group):
+    def __init__(self, assets, alien_bullet_group, alien_group):
         self.assets = assets
-        self.aliens_bullets_group = aliens_bullet_group
-        self.aliens_group = aliens_group
+        self.alien_bullets_group = alien_bullet_group
+        self.alien_group = alien_group
 
-        self.start_pos = (64, PLAY_AREA.bottom - 400)
+        self.start_pos = (80, PLAY_AREA.bottom - 350)
         self.aliens_formation_list = []
-        self.create_alien_formation()
 
         self.direction = pygame.Vector2(1, 0)
         self.aliens_move_timer = TimerSystem(ALIEN_TIMER)
@@ -26,11 +25,13 @@ class AliensSystem:
         self.current_alien = 0
         self.animation_index = 1
 
+        self.shooting_enabled = False
+
     def update(self, dt):
         """Update alien formation"""
         self.aliens_move_timer.update(dt)
         self.update_aliens_formation()
-        if len(self.aliens_bullets_group) <= 0:
+        if len(self.alien_bullets_group) <= 0 and self.shooting_enabled:
             self.create_bullet()
 
     def update_aliens_formation(self):
@@ -63,7 +64,7 @@ class AliensSystem:
                 alive_aliens.append(alien)
 
         alien = choice(alive_aliens)
-        AlienBullet(alien.rect.midbottom, alien.bullets_images, self.aliens_bullets_group)
+        AlienBullet(alien.rect.midbottom, alien.bullets_images, self.alien_bullets_group)
 
     def move_horizontal(self, alien):
         """Move alien horizontal"""
@@ -132,5 +133,5 @@ class AliensSystem:
                     self.assets[alien_type]['images'],
                     self.assets[alien_type]['bullets'],
                     ALIEN_SCORE[alien_type],
-                    self.aliens_group
+                    self.alien_group
                 ))
