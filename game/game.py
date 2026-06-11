@@ -20,10 +20,7 @@ class Game:
 
         self.mode = 'LEVEL'
         self.num_players = None
-        self.lives = 3
         self.credit = 0
-        self.score_1 = 0
-        self.score_2 = 0
         self.high_score = 0
 
         self.assets = AssetsSystem()
@@ -78,6 +75,9 @@ class Game:
         elif self.mode == 'LEVEL':
             self.update_level(dt)
 
+        elif self.mode == 'GAME_OVER':
+            pass
+
     def draw(self):
         """Draw elements on screen"""
         self.surface.fill('black')
@@ -91,8 +91,8 @@ class Game:
         elif self.mode == 'LEVEL':
             self.level.draw(self.surface)
 
-        self.hud.draw_hud(self.score_1, self.score_2, self.high_score, 
-                        self.lives, self.credit, self.surface)
+        self.hud.draw_hud(self.level.score_1, self.level.score_2, self.high_score, 
+                        self.level.lives, self.credit, self.surface)
 
         pygame.display.flip()
 
@@ -113,3 +113,5 @@ class Game:
     def update_level(self, dt):
         """Update LEVEL mode"""
         self.level.update(dt)
+        if self.level.phase == 'GAME_OVER':
+            self.mode = 'GAME_OVER'
