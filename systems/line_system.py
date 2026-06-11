@@ -1,4 +1,5 @@
 from config import *
+
 from entities.line_blocks import LineBlocks
 
 class LineSystem:
