@@ -105,4 +105,4 @@ class Level:
                     self.groups['player']
                 )
 
-        self.aliens_system.allow_shoot = True
+        self.aliens_system.shooting_enabled = True
