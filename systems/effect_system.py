@@ -30,3 +30,7 @@ class EffectSystem:
     def spawn_player_explosion(self, pos, full_duration, frame_duration):
         """Spawn player explosion animated effect"""
         AnimatedEffect(self.assets['player_explosion'], pos, full_duration, frame_duration, self.group)
+
+    def spawn_player_bullet_alien_bullet_explosion(self, pos, duration):
+        """Spawn player bullet and alien bullet explosion"""
+        Effect(self.assets['player_bullet_fx'], pos, duration, self.group)
