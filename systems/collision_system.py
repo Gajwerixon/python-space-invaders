@@ -19,6 +19,8 @@ class CollisionSystem:
         self.alien_bullet_player_collision()
         self.alien_bullet_shield_collision()
 
+        self.player_bullet_alien_bullet_collision()
+
     def player_bullet_outside_play_area(self):
         """Player bullet hit play area top"""
         for bullet in self.groups['player_bullets']:
@@ -83,4 +85,19 @@ class CollisionSystem:
             self.effect_system.spawn_alien_bullet_shield_explosion(
                 bullet.rect.midbottom,
                 0.1
+            )
+
+    def player_bullet_alien_bullet_collision(self):
+        """Player bullet and alien bullet collision"""
+        collision = pygame.sprite.groupcollide(
+            self.groups['player_bullets'], 
+            self.groups['alien_bullets'],
+            True, 
+            True
+        )
+        for player_bullet, _ in collision.items():
+            print(player_bullet.rect.midtop)
+            self.effect_system.spawn_player_bullet_alien_bullet_explosion(
+                player_bullet.rect.midtop,
+                0.5,
             )
