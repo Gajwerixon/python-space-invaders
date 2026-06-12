@@ -33,6 +33,7 @@ class Game:
             'player_bullets': pygame.sprite.Group(),
             'alien_bullets': pygame.sprite.Group(),
             'effects': pygame.sprite.Group(),
+            'ufo': pygame.sprite.Group()
         }
 
         self.level = Level(self.groups, self.assets)
