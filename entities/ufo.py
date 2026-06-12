@@ -13,6 +13,10 @@ class Ufo(pygame.sprite.Sprite):
 
         self.score = score
 
+    def update(self, dt):
+        """Update Ufo"""
+        self.movement(dt)
+
     def movement(self, dt):
         """Movement"""
         self.pos.x += self.direction_x * self.speed * dt
