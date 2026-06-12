@@ -5,6 +5,7 @@ from systems.aliens_systems import AliensSystem
 from systems.effect_system import EffectSystem
 from systems.collision_system import CollisionSystem
 from systems.timer_system import TimerSystem
+from systems.ufo_system import UfoSystem
 
 from config import *
 
@@ -34,6 +35,7 @@ class Level:
             self.groups['alien_bullets'], 
             self.groups['aliens']
         )
+        self.ufo_system = UfoSystem(self.assets.ufo, self.groups['ufo'])
 
         self.initialize_level()
 
@@ -74,6 +76,7 @@ class Level:
     def update_gameplay(self, dt):
         """Update GAMEPLAY phase"""
         self.aliens_system.update(dt)
+        self.ufo_system.update(dt)
         self.collision_system.update()
         self.update_groups(dt)
 
@@ -94,7 +97,7 @@ class Level:
     def update_groups(self, dt):
         """Update groups except aliens_group"""
         for name, group in self.groups.items():
-            if name == 'aliens':
+            if name == 'aliens' or name == 'ufo':
                 continue
             group.update(dt)
 
