@@ -93,3 +93,15 @@ LETTER_TIMER = 0.0625
 
 # Advance Table
 ADVANCE_TABLE_TRANSITION_TIMER = 0.75
+
+# UFO
+UFO = {
+    'speed': 100,
+    'spawn_timer': 25.6,
+    'start_y': PLAY_AREA.top + 11,
+    'start_x': (25, WIDTH - 25),
+    'score_values': [
+        100, 50, 50, 100, 150, 100, 100, 50,
+        300, 100, 100, 100, 50, 150, 100, 50
+    ]
+}
