@@ -1,6 +1,6 @@
 import pygame
 
-from config import *
+from config import ALIENS_FORMATION, ALIENS_MOVEMENT, PLAY_AREA
 from random import choice
 
 from entities.alien import Alien
@@ -19,7 +19,7 @@ class AliensSystem:
         self.aliens_formation_list = []
 
         self.direction = pygame.Vector2(1, 0)
-        self.aliens_move_timer = TimerSystem(ALIEN_TIMER)
+        self.aliens_move_timer = TimerSystem(ALIENS_MOVEMENT['timer'])
 
         self.state = 'move_horizontal'
         self.current_alien = 0
@@ -68,18 +68,18 @@ class AliensSystem:
 
     def move_horizontal(self, alien):
         """Move alien horizontal"""
-        alien.pos.x += self.direction.x * HORIZONTAL_STEP
+        alien.pos.x += self.direction.x * ALIENS_MOVEMENT['horizontal_step']
 
     def move_vertical(self, alien):
         """Move current alien vertical"""
-        alien.pos.x += self.direction.x * (HORIZONTAL_STEP * 2)
-        alien.pos.y += VERTICAL_STEP
+        alien.pos.x += self.direction.x * (ALIENS_MOVEMENT['horizontal_step'] * 2)
+        alien.pos.y += ALIENS_MOVEMENT['vertical_step']
 
     def check_wall_collision(self):
         """Check wall collision"""
         for alien in self.aliens_formation_list:
             if alien.alive():
-                if alien.rect.right >= PLAY_AREA.right - FORMATION_MARGIN or alien.rect.left <= FORMATION_MARGIN:
+                if alien.rect.right >= PLAY_AREA.right - ALIENS_FORMATION['margin'] or alien.rect.left <= ALIENS_FORMATION['margin']:
                     return True
         return False
 
@@ -125,13 +125,13 @@ class AliensSystem:
 
     def create_alien_formation(self):
         """Create alien formation"""
-        for alien_col, alien_type in enumerate(ALIENS_SETUP):
-            for alien_row in range(NUM_ALIENS):
+        for alien_col, alien_type in enumerate(ALIENS_FORMATION['layout']):
+            for alien_row in range(ALIENS_FORMATION['num_aliens']):
                 self.aliens_formation_list.append(Alien(
-                    (self.start_pos[0] + (alien_row * (ALIEN_STEP + ALIEN_SIZE[0])), 
-                    self.start_pos[1] - (alien_col * (ALIEN_STEP + ALIEN_SIZE[1]))),
+                    (self.start_pos[0] + (alien_row * (ALIENS_FORMATION['spacing'] + ALIENS_FORMATION['size'][0])), 
+                    self.start_pos[1] - (alien_col * (ALIENS_FORMATION['spacing'] + ALIENS_FORMATION['size'][1]))),
                     self.assets[alien_type]['images'],
                     self.assets[alien_type]['bullets'],
-                    ALIEN_SCORE[alien_type],
+                    ALIENS_FORMATION['scores'][alien_type],
                     self.alien_group
                 ))
