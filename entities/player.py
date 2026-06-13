@@ -1,6 +1,6 @@
 import pygame
 
-from config import *
+from config import PLAY_AREA, PLAYER, WIDTH
 from entities.player_bullet import PlayerBullet
 
 class Player(pygame.sprite.Sprite):
@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = pygame.Vector2(self.rect.center)
 
         self.direction = pygame.Vector2()
-        self.speed = PLAYER_SPEED
+        self.speed = PLAYER['speed']
 
         self.bullets = player_bullets_group
     
