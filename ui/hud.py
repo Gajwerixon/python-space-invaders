@@ -1,4 +1,4 @@
-from config import *
+from config import TOP_HUD, BOTTOM_HUD, WIDTH, PLAY_AREA
 
 class HUD:
     """Heads-Up Display"""
@@ -14,13 +14,13 @@ class HUD:
     def draw_top_hud(self, score_1, score_2, high_score, surface):
         """Draw top hud"""
         self.draw_score(score_1, 'S C O R E < 1 >', 
-                        (TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y), 
+                        (TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
                         'topleft', surface)
         self.draw_score(high_score, 'H I - S C O R E', 
-                        (WIDTH // 2, TOP_HUD_MARGIN_Y), 
+                        (WIDTH // 2, TOP_HUD['margin_y']), 
                         'midtop', surface)
         self.draw_score(score_2, 'S C O R E < 2 >', 
-                        (WIDTH - TOP_HUD_MARGIN_X, TOP_HUD_MARGIN_Y), 
+                        (WIDTH - TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
                         'topright', surface)
 
     def draw_bottom_hud(self, lives, credits, surface):
@@ -33,13 +33,13 @@ class HUD:
         text_rect = self.blit_text(surface, text, pos, anchor)
         
         self.blit_text(surface, f'{label:04d}', 
-                       (text_rect.centerx, text_rect.bottom + TEXT_SCORE_PADDING),
+                       (text_rect.centerx, text_rect.bottom + TOP_HUD['score_padding']),
                        anchor='midtop')
 
     def draw_lives(self, surface, lives):
         """Draw lives"""
         text_rect = self.blit_text(surface, str(lives), 
-                       (BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y),
+                       (BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y']),
                        'topleft')
         
         x, y = text_rect.topright
@@ -47,11 +47,11 @@ class HUD:
         
         if (lives - 1) != 0:
             for i in range(lives - 1):
-                surface.blit(self.ship_img, (x_start + i * SHIP_IMG_OFFSET, y))
+                surface.blit(self.ship_img, (x_start + i * BOTTOM_HUD['ship_offset'], y))
 
     def draw_credit(self, surface, credits):
         """Draw credit"""
-        pos = (WIDTH - BOTTOM_HUD_MARGIN_X, HUD_BOTTOM_Y + BOTTOM_HUD_PADDING_Y)
+        pos = (WIDTH - BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y'])
         self.blit_text(surface, f'C R E D I T    {credits:02d}', pos, 'topright')
 
     def blit_text(self, surface, text, pos, anchor='center'):
