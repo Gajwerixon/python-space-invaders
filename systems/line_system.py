@@ -1,4 +1,4 @@
-from config import *
+from config import LINES, PLAY_AREA
 
 from entities.line_blocks import LineBlocks
 
@@ -9,7 +9,7 @@ class LineSystem:
 
     def create_line_blocks(self):
         """Create line blocks"""
-        for line in range(NUM_LINES):
-            pos_x = LINE_SIZE[0] * line
-            pos_y = HUD_BOTTOM_Y - LINE_SIZE[1]
+        for line in range(LINES['count']):
+            pos_x = LINES['size'][0] * line
+            pos_y = PLAY_AREA.bottom - LINES['size'][1]
             LineBlocks((pos_x, pos_y), self.line_group)
