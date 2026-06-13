@@ -24,9 +24,9 @@ class AssetsSystem:
                     no_bg_img = pygame.image.load(img).convert()
                     no_bg_img.set_colorkey((0, 0, 0))
                     if folder.name == 'bullets': 
-                        ready_img = pygame.transform.scale(no_bg_img, BULLET_SIZE)
+                        ready_img = pygame.transform.scale(no_bg_img, ALIENS_SHOOTING['size'])
                     else: 
-                        ready_img = pygame.transform.scale(no_bg_img, ALIEN_SIZE)
+                        ready_img = pygame.transform.scale(no_bg_img, ALIENS_FORMATION['size'])
 
                     aliens[alien.name][folder.name].append(ready_img)                    
         return aliens
