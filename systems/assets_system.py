@@ -1,7 +1,7 @@
 import pygame
 
 from pathlib import Path
-from config import *
+from config import FONT_SIZE, EXPLOSIONS, PLAYER, ALIENS_FORMATION, ALIENS_SHOOTING, UFO, BOTTOM_HUD
 
 class AssetsSystem:
     """Assets system class"""
@@ -41,23 +41,23 @@ class AssetsSystem:
         """Load effects assets"""
         effects = {
             'player_bullet_fx': self.load_asset('assets/entities/effect/player/player_bullet_fx.png', 
-                                                MISS_EXPLOSION_FX_SIZE),
+                                                EXPLOSIONS['alien_bullet_miss_size']),
             'player_explosion': [self.load_asset('assets/entities/effect/player/player_explosion_0.png', 
-                                                PLAYER_SIZE),
+                                                PLAYER['size']),
                                  self.load_asset('assets/entities/effect/player/player_explosion_1.png',
-                                                 PLAYER_SIZE)],
+                                                 PLAYER['size'])],
             'alien_bullet_fx': self.load_asset('assets/entities/effect/alien/alien_bullet_fx.png', 
-                                               MISS_ALIEN_EXPLOSION_FX_SIZE), 
+                                               EXPLOSIONS['player_bullet_miss_size']), 
             'alien_explosion_fx': self.load_asset('assets/entities/effect/alien/alien_explosion_fx.png',
-                                                  ALIEN_EXPLOSION_FX_SIZE)
+                                                  EXPLOSIONS['alien_size'])
         }
         return effects
     
     def load_player_assets(self):
         """Load player assets"""
         player_assets = {
-            'player_img': self.load_asset('assets/entities/player/player.png', PLAYER_SIZE),
-            'player_img_hud': self.load_asset('assets/entities/player/player.png', SHIP_IMG_SIZE)
+            'player_img': self.load_asset('assets/entities/player/player.png', PLAYER['size']),
+            'player_img_hud': self.load_asset('assets/entities/player/player.png', BOTTOM_HUD['ship_size'])
         }
         return player_assets
     
@@ -67,4 +67,4 @@ class AssetsSystem:
     
     def load_ufo_assets(self):
         """Load ufo assets"""
-        return self.load_asset('assets/entities/ufo/ufo_img.png', (48, 21))
+        return self.load_asset('assets/entities/ufo/ufo_img.png', UFO['size'])
