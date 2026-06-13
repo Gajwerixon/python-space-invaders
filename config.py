@@ -3,40 +3,49 @@ import pygame
 # SCREEN
 WIDTH, HEIGHT = 672, 768
 
-# GAME CONSTANT
+# COLORS
 GREEN = (0, 230, 0)
+
+# FONT
 FONT_SIZE = 25
 
-# TOP HUD (rules) 
-TOP_HUD_HEIGHT = 130
-TOP_HUD_MARGIN_X = 30
-TOP_HUD_MARGIN_Y = 20
-TEXT_SCORE_PADDING = 10
+# TOP HUD
+TOP_HUD = {
+    'height': 130,
+    'margin_x': 30,
+    'margin_y': 20,
+    'score_padding': 10,
+}
 
-# BOTTOM HUD (rules)
-BOTTOM_HUD_HEIGHT = 60
-BOTTOM_HUD_MARGIN_X = 30
-BOTTOM_HUD_PADDING_Y = 10
-HUD_BOTTOM_Y = HEIGHT - BOTTOM_HUD_HEIGHT
-
-LINE_WIDTH = 4
-SHIP_IMG_SIZE = (36, 24)
-SHIP_IMG_OFFSET = 45
+# BOTTOM HUD
+BOTTOM_HUD = {
+    'height': 60,
+    'margin_x': 30,
+    'padding_y': 10,
+    'ship_size': (36, 24),
+    'ship_offset': 45,
+}
 
 # PLAY AREA
 PLAY_AREA = pygame.Rect(
     0, 
-    TOP_HUD_HEIGHT,
+    TOP_HUD['height'],
     WIDTH,
-    HEIGHT - TOP_HUD_HEIGHT - BOTTOM_HUD_HEIGHT
+    HEIGHT - TOP_HUD['height'] - BOTTOM_HUD['height']
 )
 
 # PLAYER
-PLAYER_SIZE = (32, 22)
-PLAYER_SPEED = 150
+PLAYER = {
+    'size': (32, 22),
+    'speed': 150
+}
 
-# SHIELD
-SHIELD_SHAPE = [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+# SHIELDS
+SHIELDS = {
+    'count': 4,
+    'spacing': 144,
+    'block_size': (3, 3),
+    'shape': [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
                 [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -52,26 +61,33 @@ SHIELD_SHAPE = [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 
                 [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
                 [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
                 [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-]
-SHIELD_BLOCK_SIZE = (3, 3)
-SPACE_BETWEEN = 144
-NUM_SHIELDS = 4
+    ]
+}
 
-# Line
-NUM_LINES = 224
-LINE_SIZE = (3, 3)
+# LINES
+LINES = {
+    'count': 224,
+    'size': (3, 3),
+}
 
-# Bullet
-PLAYER_BULLET_SIZE = (2, 10)
-BULLET_SPEED = 600
+# PLAYER BULLETS
+PLAYER_BULLETS = {
+    'speed': 600,
+    'size': (2, 10),
+}
 
-# Explosion
-MISS_EXPLOSION_FX_SIZE = (30, 30)
-ALIEN_EXPLOSION_FX_SIZE = (38, 28)
-EXPLOSION_RADIUS = 196
-DIRECTION_DESTROY_CHANCE = 8
-EDGE_DESTROY_CHANCE = 6
-MISS_ALIEN_EXPLOSION_FX_SIZE = (18, 32)
+# EXPLOSIONS
+EXPLOSIONS = {
+    'player_bullet_miss_size': (18, 32),
+    'alien_size': (38, 28),
+    'alien_bullet_miss_size': (30, 30),
+
+    'shield': {
+        'radius': 196,
+        'direction_destroy_chance': 8,
+        'edge_destroy_chance': 6,
+    }
+}
 
 # ALIENS
 ALIENS_FORMATION = {
@@ -102,6 +118,7 @@ ALIENS_SHOOTING = {
 
 # UFO
 UFO = {
+    'size': (48, 21),
     'speed': 100,
     'spawn_timer': 25.6,
     'start_y': PLAY_AREA.top + 11,
