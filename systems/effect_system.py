@@ -80,3 +80,13 @@ class EffectSystem:
             'player_bullets alien_bullets', 
             self.group
         )
+
+    def player_bullets_ufo_fx(self, pos, duration):
+        """Spawn explosion after player_bullets hit ufo"""
+        Effect(
+            self.assets['ufo_dead'],
+            pos,
+            duration,
+            'player_bullets ufo',
+            self.group
+        )
