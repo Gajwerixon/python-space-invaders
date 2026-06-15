@@ -11,15 +11,21 @@ class CollisionSystem:
 
     def update(self):
         """Update collision system"""
-        self.player_bullet_outside_play_area()
+        self.events = []
+
+        self.player_bullets_play_area_top_collision()
         self.player_bullets_aliens_collision()
-        self.player_bullets_shield_collision()
+        self.player_bullets_shield_blocks_collision()
 
-        self.alien_bullet_outside_play_area()
-        self.alien_bullet_player_collision()
-        self.alien_bullet_shield_collision()
+        self.alien_bullets_play_area_bottom_collision()
+        self.alien_bullets_player_collision()
+        self.alien_bullets_shield_blocks_collision()
 
-        self.player_bullet_alien_bullet_collision()
+        self.player_bullets_alien_bullets_collision()
+
+        self.player_bullets_ufo_collision()
+
+        return self.events
 
     def player_bullets_play_area_top_collision(self):
         """Collision between player_bullets and PLAY_AREA top"""
@@ -96,8 +102,23 @@ class CollisionSystem:
             True
         )
         for player_bullet, _ in collision.items():
-            print(player_bullet.rect.midtop)
             self.effect_system.player_bullets_alien_bullets_fx(
                 player_bullet.rect.midtop,
                 0.5,
             )
+
+    def player_bullets_ufo_collision(self):
+        """Collision between player_bullets and ufo"""
+        collision = pygame.sprite.groupcollide(
+            self.groups['player_bullets'],
+            self.groups['ufo'],
+            True,
+            True
+        )
+
+        for _, ufo in collision.items():
+            self.effect_system.player_bullets_ufo_fx(
+                ufo[0].rect.center,
+                0.5
+            )
+            self.events.append('UFO_DEAD')
