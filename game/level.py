@@ -35,10 +35,9 @@ class Level:
             self.groups['alien_bullets'], 
             self.groups['aliens']
         )
-        self.ufo_system = UfoSystem(self.assets.ufo, self.groups['ufo'])
+        self.ufo_system = UfoSystem(self.assets.ufo['image'], self.groups['ufo'])
 
     def update(self, dt):
-        """Update LEVEL"""
         self.spawn_player_timer.update(dt)
 
         if self.phase == 'START':
@@ -54,12 +53,10 @@ class Level:
             return
 
     def draw(self, surface):
-        """Draw LEVEL"""
         for group in self.groups.values():
             group.draw(surface)
 
     def update_start(self, dt):
-        """Update START phase"""
         self.aliens_system.update(dt)
 
         if not self.spawn_player_timer.active:
@@ -68,7 +65,6 @@ class Level:
             self.phase = 'GAMEPLAY'
 
     def update_gameplay(self, dt):
-        """Update GAMEPLAY phase"""
         self.aliens_system.update(dt)
         self.ufo_system.update(dt)
         self.collision_system.update()
@@ -77,12 +73,11 @@ class Level:
         for event in self.collision_system.events:
             if event == "PLAYER_DEAD":
                 self.handle_player_dead()
+            elif event == 'UFO_DEAD':
+                self.ufo_system.handle_events('UFO_DEAD')
 
     def update_reset(self, dt):
-        """Update RESET phase"""
         self.update_groups(dt)
-
-        self.collision_system.events = []
 
         if not self.spawn_player_timer.active:
             self.spawn_player()
@@ -105,7 +100,6 @@ class Level:
             self.phase = 'GAME_OVER'
 
     def spawn_player(self):
-        """Spawn player"""
         self.player = Player(
                 self.assets.player['player_img'], 
                 self.groups['player_bullets'], 
@@ -113,7 +107,6 @@ class Level:
             )
 
     def initialize_level(self):
-        """Initialize level"""
         self.shield_system.create_shield_blocks()
         self.line_system.create_line_blocks()
         self.aliens_system.create_alien_formation()
