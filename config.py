@@ -119,6 +119,7 @@ ALIENS_SHOOTING = {
 # UFO
 UFO = {
     'size': (48, 21),
+    'dead_size': (48, 21),
     'speed': 100,
     'spawn_timer': 25.6,
     'start_y': PLAY_AREA.top + 11,
