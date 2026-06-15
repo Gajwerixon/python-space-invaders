@@ -46,7 +46,7 @@ class AssetsSystem:
                                                EXPLOSIONS['player_bullet_miss_size']), 
             'alien_explosion_fx': self.load_asset('assets/entities/effect/alien/alien_explosion_fx.png',
                                                   EXPLOSIONS['alien_size']),
-            'ufo_dead': self.load_asset('assets/entities/effect/ufo/ufoExplosion.png', UFO['dead_size'])
+            'ufo_dead': self.load_asset('assets/entities/effect/ufo/ufo_dead.png', UFO['dead_size'])
         }
         return effects
     
