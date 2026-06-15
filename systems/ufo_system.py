@@ -22,6 +22,12 @@ class UfoSystem:
         self.spawn_ufo_timer = TimerSystem(UFO['spawn_timer'])
         self.spawn_ufo_timer.start()
 
+    def handle_events(self, events):
+        if 'UFO_HIT' in events:
+            self.handle_ufo_kill()
+            self.phase = 'SPAWN_DELAY'
+            self.spawn_ufo_timer.start()
+
     def update(self, dt):
         """Update"""
         if self.phase == 'SPAWN_DELAY':
