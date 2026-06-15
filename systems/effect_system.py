@@ -8,29 +8,75 @@ class EffectSystem:
         self.group = group
 
     def player_bullets_aliens_fx(self, pos, duration):
-        """Spawn explosion between player bullet and alien"""
-        Effect(self.assets['alien_explosion_fx'], pos, duration, self.group)
+        """Spawn explosion between player_bullets and aliens"""
+        Effect(
+            self.assets['alien_explosion_fx'], 
+            pos, 
+            duration,
+            'player_bullets_aliens_fx', 
+            self.group
+        )
     
-    def spaw_bullet_shield_explosion(self, pos, duration):
-        """Spawn explosion effect between bullet and shield"""
-        Effect(self.assets['player_bullet_fx'], pos, duration, self.group)
+    def player_bullets_shield_blocks_fx(self, pos, duration):
+        """Spawn explosion between player bullets and shield blocks"""
+        Effect(
+            self.assets['player_bullet_fx'], 
+            pos, 
+            duration,
+            'player_bullets_shield_blocks', 
+            self.group
+        )
 
-    def spawn_player_bullet_miss_explosion(self, pos, duration):
-        """Spaw explosion effect after bullet miss"""
-        Effect(self.assets['player_bullet_fx'], pos, duration, self.group, anchor='midtop')
+    def player_bullets_miss_fx(self, pos, duration):
+        """Spawn explosion after player bullets hit PLAY_AREA top"""
+        Effect(
+            self.assets['player_bullet_fx'], 
+            pos, 
+            duration,
+            'player_bullets miss', 
+            self.group, 
+            anchor='midtop'
+        )
 
-    def spawn_alien_bullet_miss_explosion(self, pos, duration):
-        """Spawn explosion effect after alien bullet miss"""
-        Effect(self.assets['alien_bullet_fx'], pos, duration, self.group, anchor='midbottom')
+    def alien_bullets_miss_fx(self, pos, duration):
+        """Spawn explosion effect after alien bullets hit PLAY_AREA bottom"""
+        Effect(
+            self.assets['alien_bullet_fx'], 
+            pos, 
+            duration,
+            'alien_bullets miss',
+            self.group, 
+            anchor='midbottom'
+        )
 
-    def spawn_alien_bullet_shield_explosion(self, pos, duration):
-        """Spaw explosion effect between alien bullet and shield"""
-        Effect(self.assets['alien_bullet_fx'], pos, duration, self.group, anchor='center')
+    def alien_bullet_shield_fx(self, pos, duration):
+        """Spaw explosion between alien bullets and shield blocks"""
+        Effect(
+            self.assets['alien_bullet_fx'], 
+            pos, 
+            duration,
+            'alien_bullets shield_blocks', 
+            self.group, 
+            anchor='center'
+        )
 
-    def spawn_player_explosion(self, pos, full_duration, frame_duration):
-        """Spawn player explosion animated effect"""
-        AnimatedEffect(self.assets['player_explosion'], pos, full_duration, frame_duration, self.group)
+    def player_hit_fx(self, pos, full_duration, frame_duration):
+        """Spawn explosion AnimtedEffect after player was hit"""
+        AnimatedEffect(
+            self.assets['player_explosion'], 
+            pos, 
+            full_duration, 
+            frame_duration, 
+            'player_explosion', 
+            self.group
+        )
 
-    def spawn_player_bullet_alien_bullet_explosion(self, pos, duration):
-        """Spawn player bullet and alien bullet explosion"""
-        Effect(self.assets['player_bullet_fx'], pos, duration, self.group)
+    def player_bullets_alien_bullets_fx(self, pos, duration):
+        """Spawn explosion after player bullets hit alien bullets"""
+        Effect(
+            self.assets['player_bullet_fx'], 
+            pos, 
+            duration,
+            'player_bullets alien_bullets', 
+            self.group
+        )
