@@ -3,7 +3,7 @@ from systems.timer_system import TimerSystem
 
 class AnimatedEffect(pygame.sprite.Sprite):
     """Effect class"""
-    def __init__(self, images, pos, full_duration, frame_duration, groups):
+    def __init__(self, images, pos, full_duration, frame_duration, type, groups):
         super().__init__(groups)
         self.images = images
         self.image = self.images[0]
@@ -15,6 +15,8 @@ class AnimatedEffect(pygame.sprite.Sprite):
 
         self.animation_timer.start()
         self.frame_animation_timer.start()
+
+        self.type = type
 
     def update(self, dt):
         """Update explosion"""
