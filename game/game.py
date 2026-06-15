@@ -42,7 +42,7 @@ class Game:
         self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font)
         self.game_over = GameOver(self.assets.font)
         self.menu = Menu(self.assets.font)
-        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo)
+        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo['image'])
 
     def run(self):
         while self.running:
