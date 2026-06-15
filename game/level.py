@@ -37,12 +37,6 @@ class Level:
         )
         self.ufo_system = UfoSystem(self.assets.ufo, self.groups['ufo'])
 
-        self.initialize_level()
-
-    def handle_events(self, event):
-        """Handle LEVEL events"""
-        pass
-
     def update(self, dt):
         """Update LEVEL"""
         self.spawn_player_timer.update(dt)
