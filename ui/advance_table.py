@@ -6,10 +6,10 @@ from ui.animated_text import AnimatedText
 
 class AdvanceTable:
     """Advance table class"""
-    def __init__(self, font_assets, alien_assets, ufo_assets):
+    def __init__(self, font_assets, alien_assets, ufo_image):
         self.font = font_assets
         self.alien = alien_assets
-        self.ufo = ufo_assets
+        self.ufo = ufo_image
 
         self.phase = 'INTRO'
         self.continue_to_game = False
