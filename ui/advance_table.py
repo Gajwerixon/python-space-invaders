@@ -41,10 +41,6 @@ class AdvanceTable:
             (self.alien['alien_1']['images'][1], (WIDTH / 2 - 100, 580)),
         ]
     
-    def handle_events(self, event):
-        """Handle events"""
-        pass
-
     def update(self, dt):
         """Update advance table"""
         self.letter_timer.update(dt)
