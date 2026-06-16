@@ -8,7 +8,11 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, image, player_bullets_group, groups):
         super().__init__(groups)
         self.image = image
-        self.rect = self.image.get_rect(midbottom=(80, PLAY_AREA.bottom - 60))
+        self.rect = self.image.get_rect(
+            midbottom=(
+                PLAYER['start_x'], 
+                PLAY_AREA.bottom - PLAYER['start_y_offset'])
+        )
         self.pos = pygame.Vector2(self.rect.center)
 
         self.direction = pygame.Vector2()
