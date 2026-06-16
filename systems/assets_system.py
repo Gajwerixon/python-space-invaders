@@ -37,13 +37,13 @@ class AssetsSystem:
     def load_effects_assets(self):
         effects = {
             'player_bullet_fx': self.load_asset('assets/entities/effect/player/player_bullet_fx.png', 
-                                                EXPLOSIONS['alien_bullet_miss_size']),
+                                                EXPLOSIONS['player_bullet_miss_size']),
             'player_explosion': [self.load_asset('assets/entities/effect/player/player_explosion_0.png', 
                                                 PLAYER['size']),
                                  self.load_asset('assets/entities/effect/player/player_explosion_1.png',
                                                  PLAYER['size'])],
             'alien_bullet_fx': self.load_asset('assets/entities/effect/alien/alien_bullet_fx.png', 
-                                               EXPLOSIONS['player_bullet_miss_size']), 
+                                               EXPLOSIONS['alien_bullet_miss_size']), 
             'alien_explosion_fx': self.load_asset('assets/entities/effect/alien/alien_explosion_fx.png',
                                                   EXPLOSIONS['alien_size']),
             'ufo_dead': self.load_asset('assets/entities/effect/ufo/ufo_dead.png', UFO['dead_size'])
