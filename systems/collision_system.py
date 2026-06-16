@@ -65,7 +65,7 @@ class CollisionSystem:
     def alien_bullets_play_area_bottom_collision(self):
         """Collision between alien_bullets and PLAY_AREA bottom"""
         for bullet in self.groups['alien_bullets']:
-            if bullet.rect.bottom >= PLAY_AREA.bottom:
+            if bullet.rect.bottom > PLAY_AREA.bottom:
                 bullet.kill()
                 self.effect_system.alien_bullets_miss_fx(
                     bullet.rect.midbottom,
