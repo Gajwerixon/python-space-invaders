@@ -11,7 +11,7 @@ FONT_SIZE = 25
 
 # TOP HUD
 TOP_HUD = {
-    'height': 130,
+    'height': 110,
     'margin_x': 30,
     'margin_y': 20,
     'score_padding': 10,
@@ -36,8 +36,10 @@ PLAY_AREA = pygame.Rect(
 
 # PLAYER
 PLAYER = {
-    'size': (32, 22),
-    'speed': 150
+    'size': (36, 24),
+    'speed': 150,
+    'start_x': 80,
+    'start_y_offset': 54 
 }
 
 # SHIELDS
@@ -73,14 +75,14 @@ LINES = {
 # PLAYER BULLETS
 PLAYER_BULLETS = {
     'speed': 600,
-    'size': (2, 10),
+    'size': (2, 8),
 }
 
 # EXPLOSIONS
 EXPLOSIONS = {
-    'player_bullet_miss_size': (18, 32),
-    'alien_size': (38, 28),
-    'alien_bullet_miss_size': (30, 30),
+    'player_bullet_miss_size': (24, 24),
+    'alien_size': (36, 24),
+    'alien_bullet_miss_size': (16, 24),
 
     'shield': {
         'radius': 196,
@@ -98,7 +100,7 @@ ALIENS_FORMATION = {
         'alien_2': 20,
         'alien_3': 30,
     },
-    'size': (30, 22),
+    'size': (32, 24),
     'spacing': 18,
     'margin': 32,
 }
@@ -120,9 +122,9 @@ ALIENS_SHOOTING = {
 UFO = {
     'size': (48, 21),
     'dead_size': (48, 21),
-    'speed': 100,
+    'speed': 128,
     'spawn_timer': 25.6,
-    'start_y': PLAY_AREA.top + 11,
+    'start_y': PLAY_AREA.top,
     'start_x': (25, WIDTH - 25),
     'score_values': [
         100, 50, 50, 100, 150, 100, 100, 50,
