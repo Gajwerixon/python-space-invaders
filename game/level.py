@@ -7,8 +7,6 @@ from systems.collision_system import CollisionSystem
 from systems.timer_system import TimerSystem
 from systems.ufo_system import UfoSystem
 
-from config import *
-
 class Level:
     """Level class"""
     def __init__(self, groups, assets):
@@ -37,6 +35,15 @@ class Level:
         )
         self.ufo_system = UfoSystem(self.assets.ufo['image'], self.groups['ufo'])
 
+        self.manually_updated_groups = {'aliens', 'ufo'}
+
+    def initialize_level(self):
+        self.shield_system.create_shield_blocks()
+        self.line_system.create_line_blocks()
+        self.aliens_system.create_alien_formation()
+
+        self.spawn_player_timer.start()
+
     def update(self, dt):
         self.spawn_player_timer.update(dt)
 
@@ -59,8 +66,7 @@ class Level:
     def update_start(self, dt):
         self.aliens_system.update(dt)
 
-        if not self.spawn_player_timer.active:
-            self.spawn_player()
+        if self.try_spawn_player():
             self.aliens_system.shooting_enabled = True
             self.phase = 'GAMEPLAY'
 
@@ -70,25 +76,35 @@ class Level:
         self.collision_system.update()
         self.update_groups(dt)
 
-        for event in self.collision_system.events:
-            if event == "PLAYER_DEAD":
-                self.handle_player_dead()
-            elif event == 'UFO_DEAD':
-                self.ufo_system.handle_events('UFO_DEAD')
+        self.handle_events()
 
     def update_reset(self, dt):
         self.update_groups(dt)
 
-        if not self.spawn_player_timer.active:
-            self.spawn_player()
+        if self.try_spawn_player():
             self.phase = 'GAMEPLAY'
 
     def update_groups(self, dt):
         """Update groups except aliens_group"""
         for name, group in self.groups.items():
-            if name == 'aliens' or name == 'ufo':
-                continue
-            group.update(dt)
+            if name not in self.manually_updated_groups:
+                group.update(dt)
+
+    def handle_events(self):
+        """Handle events from collision system"""
+        for event in self.collision_system.events:
+            if event == "PLAYER_DEAD":
+                self.handle_player_dead()
+
+            elif event == 'UFO_DEAD':
+                self.ufo_system.handle_ufo_dead()
+
+    def try_spawn_player(self):
+        if not self.spawn_player_timer.active:
+            self.spawn_player()
+            return True
+
+        return False
 
     def handle_player_dead(self):
         """Handle 'Player_dead' event"""
@@ -105,10 +121,3 @@ class Level:
                 self.groups['player_bullets'], 
                 self.groups['player']
             )
-
-    def initialize_level(self):
-        self.shield_system.create_shield_blocks()
-        self.line_system.create_line_blocks()
-        self.aliens_system.create_alien_formation()
-
-        self.spawn_player_timer.start()
