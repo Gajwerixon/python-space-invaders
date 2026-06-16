@@ -11,5 +11,5 @@ class LineSystem:
         """Create line blocks"""
         for line in range(LINES['count']):
             pos_x = LINES['size'][0] * line
-            pos_y = PLAY_AREA.bottom - LINES['size'][1]
+            pos_y = PLAY_AREA.bottom + LINES['size'][1]
             LineBlocks((pos_x, pos_y), self.line_group)
