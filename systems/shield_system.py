@@ -1,5 +1,5 @@
 from config import SHIELDS, PLAY_AREA
-from entities.shield_blocks import ShieldBlocks
+from entities.shield_block import ShieldBlock
 
 class ShieldSystem:
     """Shields class manager"""
@@ -16,4 +16,4 @@ class ShieldSystem:
                     if shield_block == 1:
                         pos_x = start_pos[0] + SHIELDS['block_size'][0] * current_row + shield * SHIELDS['spacing']
                         pos_y = start_pos[1] + SHIELDS['block_size'][1] * current_col
-                        ShieldBlocks((pos_x, pos_y), self.shield_block_group)
+                        ShieldBlock((pos_x, pos_y), shield, (current_row, current_col), self.shield_block_group)
