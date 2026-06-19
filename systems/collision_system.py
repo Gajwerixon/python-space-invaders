@@ -17,7 +17,7 @@ class CollisionSystem:
         self.player_bullets_aliens_collision()
         self.player_bullets_shield_blocks_collision()
 
-        self.alien_bullets_play_area_bottom_collision()
+        self.alien_line_blocks_collision()
         self.alien_bullets_player_collision()
         self.alien_bullets_shield_blocks_collision()
 
@@ -95,14 +95,16 @@ class CollisionSystem:
             )
 
     # Alien
-    def alien_bullets_play_area_bottom_collision(self):
-        """Collision between alien_bullets and PLAY_AREA bottom"""
-        for bullet in self.groups['alien_bullets']:
-            if bullet.rect.bottom > PLAY_AREA.bottom:
-                bullet.kill()
-                self.effect_system.alien_bullets_miss_fx(
-                    bullet.rect.midbottom,
-                    0.25,
+    def alien_line_blocks_collision(self):
+        """Collision between alien_bullets and line_blocks"""
+        collision = pygame.sprite.groupcollide(self.groups['alien_bullets'], 
+                                               self.groups['lines'],
+                                               True, False)
+        for _, line in collision.items():
+            line[0].damage_line()
+            self.effect_system.alien_bullets_miss_fx(
+                line[0].rect.midtop,
+                0.25,
                 )
 
     def alien_bullets_player_collision(self):
