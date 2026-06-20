@@ -101,7 +101,7 @@ class CollisionSystem:
                                                self.groups['lines'],
                                                True, False)
         for _, line in collision.items():
-            line[0].damage_line()
+            line[0].apply_damage()
             self.effect_system.alien_bullets_miss_fx(
                 line[0].rect.midtop,
                 0.25,
