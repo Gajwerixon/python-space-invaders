@@ -84,7 +84,8 @@ EXPLOSIONS = {
     'alien_size': (36, 24),
     'alien_bullet_miss_size': (16, 24),
 
-    'line_cache_shape': [1 if i % 2 == 0 else 0 for i in range(LINES['count'])],
+    'line_damage_mask': [1 if i % 2 == 0 else 0 for i in range(LINES['count'])],
+    'line_damage_offsets': [-4, -3, -2, -1, 0, 1, 2, 3, 4],
 
     'shield_cache_shape': {
         'player': [
