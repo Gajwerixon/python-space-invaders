@@ -9,7 +9,7 @@ class LineSystem:
 
     def create_line_blocks(self):
         """Create line blocks"""
-        for line in range(LINES['count']):
-            pos_x = LINES['size'][0] * line
+        for block in range(LINES['count']):
+            pos_x = LINES['size'][0] * block
             pos_y = PLAY_AREA.bottom + LINES['size'][1]
-            LineBlocks((pos_x, pos_y), self.line_group)
+            LineBlocks((pos_x, pos_y), block, self.line_group)
