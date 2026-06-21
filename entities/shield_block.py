@@ -43,3 +43,10 @@ class ShieldBlock(pygame.sprite.Sprite):
 
             if block.grid_position in target_set:
                 block.kill()
+
+    def damage_shield_alien(self):
+        """Handle shield damage (by alien)"""
+        for block in self.shield_blocks_group:
+            if (block.shield_id == self.shield_id
+                and block.grid_position[1] <= self.grid_position[1]):
+                block.kill()
