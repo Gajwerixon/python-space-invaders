@@ -16,14 +16,14 @@ class CollisionSystem:
         self.player_bullets_play_area_top_collision()
         self.player_bullets_aliens_collision()
         self.player_bullets_shield_blocks_collision()
+        self.player_bullets_ufo_collision()
+
+        self.player_bullets_alien_bullets_collision()
 
         self.alien_line_blocks_collision()
         self.alien_bullets_player_collision()
         self.alien_bullets_shield_blocks_collision()
-
-        self.player_bullets_alien_bullets_collision()
-
-        self.player_bullets_ufo_collision()
+        self.alien_shield_blocks_collision()
 
         return self.events
 
@@ -127,3 +127,9 @@ class CollisionSystem:
                 bullet.rect.midbottom,
                 0.1
             )
+
+    def alien_shield_blocks_collision(self):
+        """Collision between alien and shield"""
+        collision = pygame.sprite.groupcollide(self.groups['aliens'], self.groups['shields'], False, False)
+        for _, blocks in collision.items():
+            blocks[0].damage_shield_alien()
