@@ -10,6 +10,7 @@ class AssetsSystem:
         self.player = self.load_player_assets()
         self.font = self.load_font_assets()
         self.ufo = self.load_ufo_assets()
+        self.sounds = self.load_sounds_assets()
 
     def load_alien_assets(self):
         aliens_base_path = Path('assets/entities/aliens/')
@@ -65,3 +66,26 @@ class AssetsSystem:
             'image': self.load_asset('assets/entities/ufo/ufo_img.png', UFO['size']),
         }
         return ufo_assets
+    
+    def load_sounds_assets(self):
+        return {
+            'player': {
+                'shoot': self.load_sound('assets/sounds/player_shoot.wav', 0.25),
+                'dead': self.load_sound('assets/sounds/player_dead.wav', 0.25)
+            },
+            'alien': {
+                'dead': self.load_sound('assets/sounds/alien_dead copy.wav', 0.25),
+                'movement_1': self.load_sound('assets/sounds/alien_movement_1.wav'),
+                'movement_2': self.load_sound('assets/sounds/alien_movement_2.wav'),
+                'movement_3': self.load_sound('assets/sounds/alien_movement_3.wav'),
+                'movement_4': self.load_sound('assets/sounds/alien_movement_4.wav')
+            },
+            'ufo': {
+                'movement': self.load_sound('assets/sounds/ufo_movement.wav')
+            },
+        }
+
+    def load_sound(self, path, volume=1.0):
+        sound = pygame.mixer.Sound(path)
+        sound.set_volume(volume)
+        return sound
