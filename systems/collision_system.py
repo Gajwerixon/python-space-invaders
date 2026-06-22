@@ -51,7 +51,8 @@ class CollisionSystem:
             self.effect_system.player_bullets_aliens_fx(
                 aliens[0].rect.center,
                 0.25
-            ) 
+            )
+            self.events.append(('ALIEN_DEAD', aliens[0].score))
 
     def player_bullets_shield_blocks_collision(self):
         """Collision between player_bullets and shield_blocks"""
@@ -78,7 +79,7 @@ class CollisionSystem:
                 ufo[0].rect.center,
                 0.5
             )
-            self.events.append('UFO_DEAD')
+            self.events.append(('UFO_DEAD', ufo.score))
 
     def player_bullets_alien_bullets_collision(self):
         """Collision between player_bullets and alien_bullets"""
@@ -116,7 +117,7 @@ class CollisionSystem:
                 1.5,
                 0.125,
             )
-            self.events.append('PLAYER_DEAD')
+            self.events.append(('PLAYER_DEAD',))
 
     def alien_bullets_shield_blocks_collision(self):
         """Collision between alien_bullets and shield_blocks"""
