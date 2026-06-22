@@ -10,6 +10,7 @@ from ui.menu import Menu
 from ui.hud import HUD
 from ui.game_over import GameOver
 from ui.advance_table import AdvanceTable
+from systems.sounds_system import SoundSystem
 
 class Game:
     """Game class"""
@@ -20,7 +21,7 @@ class Game:
         self.running = True
 
         # Game variable
-        self.mode = 'MENU'
+        self.mode = 'LEVEL'
         self.num_players = None
         self.credit = 0
         self.high_score = 0
@@ -126,7 +127,8 @@ class Game:
         }
 
     def create_game_objects(self):
+        self.sound_system = SoundSystem(self.assets.sounds)
         self.menu = Menu(self.assets.font)
-        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo)
-        self.level = Level(self.groups, self.assets)
+        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo['image'])
+        self.level = Level(self.groups, self.assets, self.sound_system)
         self.game_over = GameOver(self.assets.font)
