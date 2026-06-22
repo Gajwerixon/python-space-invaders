@@ -9,9 +9,10 @@ from systems.ufo_system import UfoSystem
 
 class Level:
     """Level class"""
-    def __init__(self, groups, assets):
+    def __init__(self, groups, assets, sound_system):
         self.groups = groups
         self.assets = assets
+        self.sound_system = sound_system
 
         self.phase = 'START'
         self.spawn_player_timer = TimerSystem(1.75)
@@ -36,6 +37,8 @@ class Level:
         self.ufo_system = UfoSystem(self.assets.ufo['image'], self.groups['ufo'])
 
         self.manually_updated_groups = {'aliens', 'ufo'}
+
+        self.initialize_level()
 
     def initialize_level(self):
         self.shield_system.create_shield_blocks()
@@ -93,11 +96,18 @@ class Level:
     def handle_events(self):
         """Handle events from collision system"""
         for event in self.collision_system.events:
-            if event == "PLAYER_DEAD":
+            event_type = event[0]
+            if event_type == "PLAYER_DEAD":
                 self.handle_player_dead()
+                self.sound_system.player_dead_play()
 
-            elif event == 'UFO_DEAD':
+            elif event_type == 'UFO_DEAD':
                 self.ufo_system.handle_ufo_dead()
+                self.score_1 += event[1]
+
+            elif event_type == 'ALIEN_DEAD':
+                self.score_1 += event[1]
+                self.sound_system.alien_dead_play()
 
     def try_spawn_player(self):
         if not self.spawn_player_timer.active:
