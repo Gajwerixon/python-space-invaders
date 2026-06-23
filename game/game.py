@@ -28,7 +28,7 @@ class Game:
 
         # Assets and HUD
         self.assets = AssetsSystem()
-        self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font)
+        self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font, self.assets.font_images)
 
         # Create groups and game objects
         self.groups = self.create_groups()
