@@ -79,7 +79,7 @@ class CollisionSystem:
                 ufo[0].rect.center,
                 0.5
             )
-            self.events.append(('UFO_DEAD', ufo.score))
+            self.events.append(('UFO_DEAD', ufo[0].score))
 
     def player_bullets_alien_bullets_collision(self):
         """Collision between player_bullets and alien_bullets"""
