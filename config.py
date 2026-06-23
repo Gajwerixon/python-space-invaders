@@ -20,7 +20,7 @@ TOP_HUD = {
 # BOTTOM HUD
 BOTTOM_HUD = {
     'height': 60,
-    'margin_x': 30,
+    'margin_x': 100,
     'padding_y': 10,
     'ship_size': (36, 24),
     'ship_offset': 45,
