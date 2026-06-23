@@ -2,42 +2,53 @@ from config import TOP_HUD, BOTTOM_HUD, WIDTH, PLAY_AREA
 
 class HUD:
     """Heads-Up Display"""
-    def __init__(self, ship_img, font):
+    def __init__(self, ship_img, font, digits):
         self.font = font
+        self.digits = digits
         self.ship_img = ship_img
 
     def draw_hud(self, score_1, score_2, high_score, lives, credit, surface):
-        """Draw HUD"""
         self.draw_top_hud(score_1, score_2, high_score, surface)
         self.draw_bottom_hud(lives, credit, surface)
 
     def draw_top_hud(self, score_1, score_2, high_score, surface):
-        """Draw top hud"""
-        self.draw_score(score_1, 'S C O R E < 1 >', 
-                        (TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
-                        'topleft', surface)
-        self.draw_score(high_score, 'H I - S C O R E', 
-                        (WIDTH // 2, TOP_HUD['margin_y']), 
-                        'midtop', surface)
-        self.draw_score(score_2, 'S C O R E < 2 >', 
-                        (WIDTH - TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
-                        'topright', surface)
+        self.draw_score(
+            'S C O R E < 1 >', 
+            score_1,
+            (TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
+            'topleft', 
+            surface
+        )
+
+        self.draw_score(
+            'H I - S C O R E', 
+            high_score, 
+            (WIDTH // 2, TOP_HUD['margin_y']), 
+            'midtop', 
+            surface
+        )
+
+        self.draw_score(
+            'S C O R E < 2 >', 
+            score_2,
+            (WIDTH - TOP_HUD['margin_x'], TOP_HUD['margin_y']), 
+            'topright', 
+            surface
+        )
 
     def draw_bottom_hud(self, lives, credits, surface):
-        """Draw bottom hud"""
         self.draw_lives(surface, lives)
         self.draw_credit(surface, credits)
 
-    def draw_score(self, label, text, pos, anchor, surface):
-        """Draw score"""
+    def draw_score(self, text, value, pos, anchor, surface):
         text_rect = self.blit_text(surface, text, pos, anchor)
-        
-        self.blit_text(surface, f'{label:04d}', 
-                       (text_rect.centerx, text_rect.bottom + TOP_HUD['score_padding']),
-                       anchor='midtop')
+    
+        digits = self.format_number(value)
+        start_pos = (text_rect.left + 50, text_rect.bottom + 16)
+
+        self.draw_number(digits, start_pos, 'top_hud', surface)
 
     def draw_lives(self, surface, lives):
-        """Draw lives"""
         text_rect = self.blit_text(surface, str(lives), 
                        (BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y']),
                        'topleft')
@@ -50,17 +61,27 @@ class HUD:
                 surface.blit(self.ship_img, (x_start + i * BOTTOM_HUD['ship_offset'], y))
 
     def draw_credit(self, surface, credits):
-        """Draw credit"""
         pos = (WIDTH - BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y'])
-        self.blit_text(surface, f'C R E D I T    {credits:02d}', pos, 'topright')
+        rect = self.blit_text(surface, f'C R E D I T', pos, 'topright')
+
+        digits = self.format_number(credits, length=2)
+        start_pos = (rect.right + 20, rect.top + 2) 
+        self.draw_number(digits, start_pos, 'bottom_hud', surface)
 
     def blit_text(self, surface, text, pos, anchor='center'):
         """Blit text and return rect postion"""
-        surf = self.render_text(text)
+        surf = self.font.render(text, True, 'white')
         rect = surf.get_rect(**{anchor: pos})
         surface.blit(surf, rect)
         return rect
+    
+    def format_number(self, value, length=4):
+        return str(value).zfill(length)
+    
+    def draw_number(self, digits, start_pos, hud, surface):
+        x, y = start_pos
 
-    def render_text(self, text):
-        """Render text"""
-        return self.font.render(text, True, 'white')
+        for digit in digits:
+            img = self.digits[hud][int(digit)]
+            surface.blit(img, (x, y))
+            x += img.get_width() + 3
