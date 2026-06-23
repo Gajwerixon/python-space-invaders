@@ -8,7 +8,7 @@ class SoundSystem:
         self.sounds['player']['shoot'].play()
 
     def alien_dead_play(self):
-        self.sounds['alien']['dead'].play()
+        pass
 
     def player_dead_play(self):
         self.sounds['player']['dead'].play()
