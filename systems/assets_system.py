@@ -9,6 +9,7 @@ class AssetsSystem:
         self.effects = self.load_effects_assets()
         self.player = self.load_player_assets()
         self.font = self.load_font_assets()
+        self.font_images = self.load_font_images_assets()
         self.ufo = self.load_ufo_assets()
         self.sounds = self.load_sounds_assets()
 
@@ -32,8 +33,7 @@ class AssetsSystem:
     
     def load_asset(self, path, size):
         img = pygame.image.load(path).convert_alpha()
-        img_scale = pygame.transform.scale(img, size)
-        return img_scale
+        return pygame.transform.scale(img, size)
 
     def load_effects_assets(self):
         effects = {
@@ -71,10 +71,9 @@ class AssetsSystem:
         return {
             'player': {
                 'shoot': self.load_sound('assets/sounds/player_shoot.wav', 0.25),
-                'dead': self.load_sound('assets/sounds/player_dead.wav', 0.25)
+                'dead': self.load_sound('assets/sounds/player_dead.mp3', 0.25)
             },
             'alien': {
-                'dead': self.load_sound('assets/sounds/alien_dead copy.wav', 0.25),
                 'movement_1': self.load_sound('assets/sounds/alien_movement_1.wav'),
                 'movement_2': self.load_sound('assets/sounds/alien_movement_2.wav'),
                 'movement_3': self.load_sound('assets/sounds/alien_movement_3.wav'),
@@ -89,3 +88,31 @@ class AssetsSystem:
         sound = pygame.mixer.Sound(path)
         sound.set_volume(volume)
         return sound
+    
+    def load_font_images_assets(self):
+        return {
+            'top_hud': {
+                0: self.load_asset('assets/digit_images/0.png', (15, 21)),
+                1: self.load_asset('assets/digit_images/1.png', (15, 21)),
+                2: self.load_asset('assets/digit_images/2.png', (15, 21)),
+                3: self.load_asset('assets/digit_images/3.png', (15, 21)),
+                4: self.load_asset('assets/digit_images/4.png', (15, 21)),
+                5: self.load_asset('assets/digit_images/5.png', (15, 21)),
+                6: self.load_asset('assets/digit_images/6.png', (15, 21)),
+                7: self.load_asset('assets/digit_images/7.png', (15, 21)),
+                8: self.load_asset('assets/digit_images/8.png', (15, 21)),
+                9: self.load_asset('assets/digit_images/9.png', (15, 21)),
+            },
+            'bottom_hud': {
+                0: self.load_asset('assets/digit_images/0.png', (17, 24)),
+                1: self.load_asset('assets/digit_images/1.png', (17, 24)),
+                2: self.load_asset('assets/digit_images/2.png', (17, 24)),
+                3: self.load_asset('assets/digit_images/3.png', (17, 24)),
+                4: self.load_asset('assets/digit_images/4.png', (17, 24)),
+                5: self.load_asset('assets/digit_images/5.png', (17, 24)),
+                6: self.load_asset('assets/digit_images/6.png', (17, 24)),
+                7: self.load_asset('assets/digit_images/7.png', (17, 24)),
+                8: self.load_asset('assets/digit_images/8.png', (17, 24)),
+                9: self.load_asset('assets/digit_images/9.png', (17, 24)),
+            },
+        }
