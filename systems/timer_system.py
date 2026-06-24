@@ -5,6 +5,10 @@ class TimerSystem:
         self.time_left = cooldown
         self.active = False
 
+    def set_duration(self, new_duration):
+        """Set new duration"""
+        self.duration = new_duration
+
     def start(self):
         """Start timer"""
         self.active = True
