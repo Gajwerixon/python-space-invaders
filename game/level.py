@@ -107,6 +107,7 @@ class Level:
 
             elif event_type == 'ALIEN_DEAD':
                 self.score_1 += event[1]
+                self.aliens_system.update_speed()
                 self.sound_system.alien_dead_play()
 
     def try_spawn_player(self):
