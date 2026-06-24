@@ -125,7 +125,7 @@ ALIENS_FORMATION = {
 }
 
 ALIENS_MOVEMENT = {
-    "horizontal_step": 6,
+    "horizontal_step": 8,
     "vertical_step": 32,
     "timer": 0.03125
 }
