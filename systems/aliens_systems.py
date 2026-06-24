@@ -26,6 +26,7 @@ class AliensSystem:
         self.animation_index = 1
 
         self.shooting_enabled = False
+        self.num_aliens = 0
 
     def update(self, dt):
         """Update alien formation"""
@@ -55,6 +56,12 @@ class AliensSystem:
         wall_collision = self.check_wall_collision()
         self.advance_cycle(wall_collision)
         self.aliens_move_timer.start()
+
+    def update_speed(self):
+        alive_ratio = len(self.alien_group) / 54
+        new_delay = ALIENS_MOVEMENT['timer'] * (0.5 + 0.5 * alive_ratio)
+
+        self.aliens_move_timer.set_duration(new_delay)
 
     def create_bullet(self):
         """Alien shoot bullet"""
