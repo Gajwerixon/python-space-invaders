@@ -37,7 +37,7 @@ PLAY_AREA = pygame.Rect(
 # PLAYER
 PLAYER = {
     'size': (36, 24),
-    'speed': 150,
+    'speed': 140,
     'start_x': 80,
     'start_y_offset': 54 
 }
@@ -74,7 +74,7 @@ LINES = {
 
 # PLAYER BULLETS
 PLAYER_BULLETS = {
-    'speed': 578,
+    'speed': 554,
     'size': (2, 8),
 }
 
@@ -132,7 +132,7 @@ ALIENS_MOVEMENT = {
 
 # ALIENS BULLET
 ALIENS_SHOOTING = {
-    'speed': 256,
+    'speed': 300,
     'frames_time': 0.078125,
     'size': (8, 24)
 }
