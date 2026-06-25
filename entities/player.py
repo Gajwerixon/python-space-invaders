@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.Vector2()
         self.speed = PLAYER['speed']
+        self.space_relase = True
 
         self.bullets = player_bullets_group
     
@@ -43,6 +44,7 @@ class Player(pygame.sprite.Sprite):
     def input(self):
         """Player input"""
         key = pygame.key.get_pressed()
+        pygame.key.set_repeat(200, 50)
         if key[pygame.K_RIGHT] or key[pygame.K_d]:
             self.direction.x = 1
         elif key[pygame.K_LEFT] or key[pygame.K_a]:
@@ -50,5 +52,9 @@ class Player(pygame.sprite.Sprite):
         elif not (key[pygame.K_LEFT] or key[pygame.K_a] or key[pygame.K_RIGHT] or key[pygame.K_d]):
             self.direction.x = 0
 
-        if key[pygame.K_SPACE] and len(self.bullets) <= 0:
-            PlayerBullet(self.rect.midtop, self.bullets)
+        if key[pygame.K_SPACE]:
+            if len(self.bullets) <= 0 and self.space_relase:
+                PlayerBullet(self.rect.midtop, self.bullets)
+                self.space_relase = False
+        else:
+            self.space_relase = True
