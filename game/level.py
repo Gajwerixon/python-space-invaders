@@ -16,6 +16,7 @@ class Level:
 
         self.phase = 'START'
         self.spawn_player_timer = TimerSystem(1.75)
+        self.next_level_timer = TimerSystem(1.5)
 
         self.lives = 3
         self.score_1 = 0
@@ -59,6 +60,9 @@ class Level:
         elif self.phase == 'RESET':
             self.update_reset(dt)
 
+        elif self.phase == 'NEXT_LEVEL':
+            self.update_next_level(dt)
+
         elif self.phase == 'GAME_OVER':
             return
 
@@ -87,6 +91,15 @@ class Level:
         if self.try_spawn_player():
             self.phase = 'GAMEPLAY'
 
+    def update_next_level(self, dt):
+        self.next_level_timer.update(dt)
+        if self.next_level_timer.active:
+            self.player.update(dt)
+            return
+        
+        self.handle_next_level()
+        self.phase = 'START'
+
     def update_groups(self, dt):
         """Update groups except aliens_group"""
         for name, group in self.groups.items():
@@ -110,6 +123,18 @@ class Level:
                 self.aliens_system.update_speed()
                 self.sound_system.alien_dead_play()
 
+        for event in self.player.events:
+            if event == 'PLAYER_SHOOT':
+                self.sound_system.player_shoot_play()
+            
+            self.player.events.clear()
+
+        for event in self.aliens_system.events:
+            if event == 'ALL_ALIENS_DEAD':
+                self.aliens_system.events.clear()
+                self.phase = 'NEXT_LEVEL'
+                self.next_level_timer.start()
+
     def try_spawn_player(self):
         if not self.spawn_player_timer.active:
             self.spawn_player()
@@ -119,6 +144,9 @@ class Level:
 
     def handle_player_dead(self):
         """Handle 'Player_dead' event"""
+        for bullet in self.player.bullets:
+            bullet.kill()
+
         self.lives -= 1
         if self.lives > 0: 
             self.phase = "RESET"
@@ -132,3 +160,13 @@ class Level:
                 self.groups['player_bullets'], 
                 self.groups['player']
             )
+        
+    def handle_next_level(self):
+        self.player.kill()
+        self.shield_system.shield_block_group.empty()
+        self.line_system.line_group.empty()
+        self.aliens_system.alien_group.empty()
+
+        self.aliens_system.create_alien_formation()
+        self.shield_system.create_shield_blocks()
+        self.line_system.create_line_blocks()
