@@ -2,7 +2,7 @@ import pygame
 
 class Alien(pygame.sprite.Sprite):
     """Alien class"""
-    def __init__(self, pos, images, bullets, score, alien_group):
+    def __init__(self, pos, images, bullets, score, alien_group, grid_pos):
         super().__init__(alien_group)
         self.images = images
         self.image = images[0]
@@ -11,3 +11,4 @@ class Alien(pygame.sprite.Sprite):
 
         self.bullets_images = bullets
         self.score = score
+        self.grid_pos = grid_pos
