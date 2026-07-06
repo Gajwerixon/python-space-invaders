@@ -28,8 +28,14 @@ class AliensSystem:
         self.shooting_enabled = False
         self.num_aliens = 0
 
+        self.events = []
+
     def update(self, dt):
         """Update alien formation"""
+        if not self.alien_group:
+            self.events.append('ALL_ALIENS_DEAD')
+            return
+        
         self.aliens_move_timer.update(dt)
         self.update_aliens_formation()
         if len(self.alien_bullets_group) <= 0 and self.shooting_enabled:
@@ -41,10 +47,6 @@ class AliensSystem:
             return
         
         alien = self.get_current_alien()
-
-        if not alien.alive():
-            self.current_alien = self.find_next_alive_index()
-            return
         
         if self.state == 'move_horizontal':
             self.move_horizontal(alien)
@@ -63,15 +65,23 @@ class AliensSystem:
 
         self.aliens_move_timer.set_duration(new_delay)
 
+    def get_lowest_aliens(self):
+        """Return the lowest alive alien from each column."""
+        columns = {}
+
+        for alien in self.get_alive_aliens():
+            columns.setdefault(alien.grid_pos[1], alien)
+
+        return list(columns.values())
+
     def create_bullet(self):
         """Alien shoot bullet"""
-        alive_aliens = []
-        for alien in self.aliens_formation_list:
-            if alien.alive():
-                alive_aliens.append(alien)
-
-        alien = choice(alive_aliens)
-        AlienBullet(alien.rect.midbottom, alien.bullets_images, self.alien_bullets_group)
+        alien = choice(self.get_lowest_aliens())
+        AlienBullet(
+            (alien.rect.centerx, alien.rect.bottom + 25), 
+            alien.bullets_images, 
+            self.alien_bullets_group
+        )
 
     def move_horizontal(self, alien):
         """Move alien horizontal"""
@@ -84,9 +94,8 @@ class AliensSystem:
 
     def check_wall_collision(self):
         """Check wall collision"""
-        for alien in self.aliens_formation_list:
-            if alien.alive():
-                if alien.rect.right >= PLAY_AREA.right - ALIENS_FORMATION['margin'] or alien.rect.left <= ALIENS_FORMATION['margin']:
+        for alien in self.get_alive_aliens():
+            if alien.rect.right >= PLAY_AREA.right - ALIENS_FORMATION['margin'] or alien.rect.left <= ALIENS_FORMATION['margin']:
                     return True
         return False
 
@@ -108,27 +117,13 @@ class AliensSystem:
         """Get current alien"""
         return self.aliens_formation_list[self.current_alien]
 
-    def find_next_alive_index(self):
-        """Get next alive index of alien in formation"""
-        start = self.current_alien
-        index = start
-
-        while True:
-            index += 1
-
-            if index >= len(self.aliens_formation_list):
-                index = 0
-
-            if self.aliens_formation_list[index].alive():
-                return index
-
-            if index == start:
-                return None
-
     def update_alien_visuals(self, alien):
         """Update alien position and change alien image"""
         alien.rect.center = alien.pos
         alien.image = alien.images[self.animation_index]
+
+    def get_alive_aliens(self):
+        return [alien for alien in self.aliens_formation_list if alien.alive()]
 
     def create_alien_formation(self):
         """Create alien formation"""
@@ -140,5 +135,6 @@ class AliensSystem:
                     self.assets[alien_type]['images'],
                     self.assets[alien_type]['bullets'],
                     ALIENS_FORMATION['scores'][alien_type],
-                    self.alien_group
+                    self.alien_group,
+                    (alien_col, alien_row)
                 ))
