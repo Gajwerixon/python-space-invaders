@@ -92,7 +92,7 @@ class CollisionSystem:
         for player_bullet, _ in collision.items():
             self.effect_system.player_bullets_alien_bullets_fx(
                 player_bullet.rect.midtop,
-                0.5,
+                0.2,
             )
 
     # Alien
