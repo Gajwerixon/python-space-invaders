@@ -2,6 +2,7 @@ import pygame
 
 from config import PLAY_AREA, PLAYER, WIDTH
 from entities.player_bullet import PlayerBullet
+from systems.sounds_system import SoundSystem
 
 class Player(pygame.sprite.Sprite):
     """Player class"""
@@ -20,7 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.space_relase = True
 
         self.bullets = player_bullets_group
-    
+
+        self.events = []
+
     def update(self, dt):
         """Update player"""
         self.input()
@@ -55,6 +58,7 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_SPACE]:
             if len(self.bullets) <= 0 and self.space_relase:
                 PlayerBullet(self.rect.midtop, self.bullets)
+                self.events.append('PLAYER_SHOOT')
                 self.space_relase = False
         else:
             self.space_relase = True
