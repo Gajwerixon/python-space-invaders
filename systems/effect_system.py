@@ -77,7 +77,14 @@ class EffectSystem:
             self.assets['player_bullet_fx'], 
             pos, 
             duration,
-            'player_bullets alien_bullets', 
+            'player_bullets_alien_bullets', 
+            self.group
+        )
+        Effect(
+            self.assets['alien_bullet_fx'], 
+            (pos[0], pos[1] - 20), 
+            duration,
+            'player_bullets_alien_bullets', 
             self.group
         )
 
