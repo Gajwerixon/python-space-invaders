@@ -1,6 +1,6 @@
 import pygame
 
-from config import *
+from config import PLAY_AREA
 
 class CollisionSystem:
     """Collision System class"""
@@ -11,25 +11,24 @@ class CollisionSystem:
 
     def update(self):
         """Update collision system"""
-        self.events = []
-
+        # Player
         self.player_bullets_play_area_top_collision()
         self.player_bullets_aliens_collision()
         self.player_bullets_shield_blocks_collision()
         self.player_bullets_ufo_collision()
 
-        self.player_bullets_alien_bullets_collision()
-
+        # Aliens
         self.alien_line_blocks_collision()
         self.alien_bullets_player_collision()
         self.alien_bullets_shield_blocks_collision()
         self.alien_shield_blocks_collision()
 
-        return self.events
+        # Other
+        self.player_bullets_alien_bullets_collision()
 
-    # Player
+    # --- Player ---
     def player_bullets_play_area_top_collision(self):
-        """Collision between player_bullets and PLAY_AREA top"""
+        """Collision between player_bullets and PLAY_AREA top (miss)"""
         for bullet in self.groups['player_bullets']:
             if bullet.rect.top <= PLAY_AREA.top:
                 bullet.kill()
@@ -89,13 +88,14 @@ class CollisionSystem:
             True, 
             True
         )
+
         for player_bullet, _ in collision.items():
             self.effect_system.player_bullets_alien_bullets_fx(
                 player_bullet.rect.midtop,
                 0.2,
             )
 
-    # Alien
+    # --- Aliens ---
     def alien_line_blocks_collision(self):
         """Collision between alien_bullets and line_blocks"""
         collision = pygame.sprite.groupcollide(self.groups['alien_bullets'], 
