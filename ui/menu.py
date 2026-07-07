@@ -26,18 +26,16 @@ class Menu:
         ]
 
     def handle_events(self, event):
-        """Handle menu events"""
+        """Handle Menu events"""
         if self.animation_done:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN and self.selected_option != 1:
-                    self.selected_option = 1
-                elif event.key == pygame.K_UP and self.selected_option != 0:
-                    self.selected_option = 0
-                elif event.key == pygame.K_RETURN:
-                    self.selection_confirmed = True
+            if event.key in (pygame.K_DOWN, pygame.K_UP):
+                self.selected_option_idx = 1 - self.selected_option_idx
+
+            elif event.key == pygame.K_RETURN:
+                self.selection_confirmed = True
 
     def update(self, dt):
-        """Update menu"""
+        """Update Menu"""
         self.letter_timer.update(dt)
 
         if not self.letter_timer.active:
@@ -51,7 +49,7 @@ class Menu:
             self.animation_done = True
 
     def draw(self, surface):
-        """Draw menu"""
+        """Draw Menu"""
         for text, pos in self.static_elements:
             self.draw_element(text, pos, surface)
         
