@@ -37,16 +37,20 @@ class UfoSystem:
 
     def spawn_new_ufo(self):
         """Spawn new Ufo"""
-        self.ufo = Ufo(self.image, 
-                       self.spaw_pos[self.current_spawn_pos], 
-                       self.direction_x,
-                       self.speed,
-                       self.score[self.current_score_index],
-                       self.group)
+        self.ufo = Ufo(
+            self.image, 
+            self.spaw_pos[self.current_spawn_pos], 
+            self.direction_x,
+            self.speed,
+            self.score[self.current_score_index],
+            self.group
+        )
     
     def outside_play_arena(self):
         """Check if Ufo is outside play arena"""
-        if self.ufo.rect.left <= 0 or self.ufo.rect.right >= WIDTH:
+        if self.direction_x == 1 and self.ufo.rect.left >= WIDTH:
+            return True
+        if self.direction_x == -1 and self.ufo.rect.right <= 0:
             return True
         return False
     
@@ -55,13 +59,12 @@ class UfoSystem:
         self.phase = 'SPAWN_DELAY'
         self.spawn_ufo_timer.start()
 
-        self.ufo.kill()
-        self.ufo = None
+        if self.ufo:
+            self.ufo.kill()
+            self.ufo = None
 
         self.direction_x *= -1
 
-        self.current_score_index += 1
-        if self.current_score_index >= len(self.score):
-            self.current_score_index = 0
+        self.current_score_index = (self.current_score_index + 1) % len(self.score)
         
-        self.current_spawn_pos = 1 if self.current_spawn_pos == 0 else 0
+        self.current_spawn_pos = 1 - self.current_spawn_pos
