@@ -112,7 +112,7 @@ class CollisionSystem:
         """Collision between alien_bullets and player"""
         collision = pygame.sprite.groupcollide(self.groups['player'], self.groups['alien_bullets'], True, True)
         for player, _ in collision.items():
-            self.effect_system.player_hit_fx(
+            self.effect_system.alien_bullet_player_fx(
                 player.rect.center,
                 1.5,
                 0.125,
