@@ -8,6 +8,10 @@ class AnimatedText:
         self.index = 0
         self.done = False
 
+    def skip_animation(self):
+        """Skip animation"""
+        self.done = True
+
     def update(self):
         """Update animated text"""
         if self.done:
