@@ -6,8 +6,9 @@ from ui.animated_text import AnimatedText
 
 class Menu:
     """Menu class"""
-    def __init__(self, font):
+    def __init__(self, font, sounds_system):
         self.font = font
+        self.sounds_system = sounds_system
 
         self.animation_done = False
         self.selection_confirmed = False
@@ -39,8 +40,12 @@ class Menu:
             
             if event.key == pygame.K_UP:
                 self.selected_option_idx = 0
+                self.sounds_system.ui_switch_option_play()
+                
             elif event.key == pygame.K_DOWN:
                 self.selected_option_idx = 1
+                self.sounds_system.ui_switch_option_play()
+
             elif event.key == pygame.K_RETURN:
                 self.selection_confirmed = True
 
