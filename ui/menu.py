@@ -12,7 +12,7 @@ class Menu:
         self.animation_done = False
         self.selection_confirmed = False
         self.player_options = [1, 2]
-        self.selected_option = 0
+        self.selected_option_idx = 0
 
         self.letter_timer = TimerSystem(LETTER_TIMER)
         self.static_elements = [('S E L E C T  N U M B E R  O F  P L A Y E R S', (WIDTH / 2, HEIGHT / 2 - 25))]
@@ -27,10 +27,20 @@ class Menu:
 
     def handle_events(self, event):
         """Handle Menu events"""
-        if self.animation_done:
-            if event.key in (pygame.K_DOWN, pygame.K_UP):
-                self.selected_option_idx = 1 - self.selected_option_idx
+        if event.type == pygame.KEYDOWN:
+            if not self.animation_done and event.key == pygame.K_RETURN:
+                for element in self.animated_elements:
+                    element.skip_animation()
+                self.animation_done = True
+                return
 
+            if not self.animation_done:
+                return
+            
+            if event.key == pygame.K_UP:
+                self.selected_option_idx = 0
+            elif event.key == pygame.K_DOWN:
+                self.selected_option_idx = 1
             elif event.key == pygame.K_RETURN:
                 self.selection_confirmed = True
 
@@ -72,7 +82,7 @@ class Menu:
 
     def draw_number_of_players_marker(self, surface):
         """Draw current player marker"""
-        menu_index = self.player_options[self.selected_option]
+        menu_index = self.player_options[self.selected_option_idx]
         self.draw_element('*', 
                           (self.animated_elements[menu_index].pos[0] - 30,
                             self.animated_elements[menu_index].pos[1]),
@@ -83,4 +93,4 @@ class Menu:
     @property
     def get_num_players(self):
         """Return num of player"""
-        return self.player_options[self.selected_option]
+        return self.player_options[self.selected_option_idx]
