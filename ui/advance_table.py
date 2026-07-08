@@ -41,6 +41,21 @@ class AdvanceTable:
             (self.alien['alien_1']['images'][1], (WIDTH / 2 - 100, 580)),
         ]
     
+    def handle_events(self, event):
+        """Handle AdvanceTable events"""
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN and not self.phase == 'FINISHED':
+                for text_elements in (self.intro_text, self.score_text):
+                    for element in text_elements:
+                        element.skip_animation()
+
+                self.phase = 'FINISHED'
+                self.transition_timer.start()
+                return
+
+            if event.key == pygame.K_RETURN and self.phase == 'FINISHED':
+                self.continue_to_game = True
+
     def update(self, dt):
         """Update advance table"""
         self.letter_timer.update(dt)
