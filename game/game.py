@@ -63,7 +63,7 @@ class Game:
         self.advance_table = None
         self.game_over = None
         
-        self.menu = Menu(self.assets.font) # Tworzymy Menu
+        self.menu = Menu(self.assets.font, self.sound_system)
         self.mode = 'MENU'
 
     def switch_to_advance_table(self):
@@ -71,7 +71,11 @@ class Game:
         self.num_players = self.menu.get_num_players
         self.menu = None
         
-        self.advance_table = AdvanceTable(self.assets.font, self.assets.aliens, self.assets.ufo['image'])
+        self.advance_table = AdvanceTable(
+            self.assets.font,
+            self.assets.aliens, 
+            self.assets.ufo['image']
+        )
         self.mode = 'ADVANCE_TABLE'
 
     def switch_to_level(self):
@@ -97,11 +101,13 @@ class Game:
         if self.mode == 'MENU' and self.menu:
             self.menu.update(dt)
             if self.menu.selection_confirmed:
+                self.sound_system.ui_next_phase_play()
                 self.switch_to_advance_table()
         
         elif self.mode == 'ADVANCE_TABLE' and self.advance_table:
             self.advance_table.update(dt)
             if self.advance_table.continue_to_game:
+                self.sound_system.ui_next_phase_play()
                 self.switch_to_level()
 
         elif self.mode == 'LEVEL' and self.level:
