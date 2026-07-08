@@ -26,3 +26,10 @@ class SoundSystem:
         pass
 
     # --- UI ---
+    def ui_next_phase_play(self):
+        """Play the next_phase sound in UI objects"""
+        self.sounds['ui']['next_phase'].play()
+
+    def ui_switch_option_play(self):
+        """Play the switch_option sound in UI objects"""
+        self.sounds['ui']['switch_option'].play()
