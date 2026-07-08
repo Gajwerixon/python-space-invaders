@@ -52,6 +52,9 @@ class Game:
             elif self.mode == 'MENU' and self.menu:
                 self.menu.handle_events(event)
 
+            elif self.mode == 'ADVANCE_TABLE' and self.advance_table:
+                self.advance_table.handle_events(event)
+
     # --- Switches ---
     def switch_to_menu(self):
         """Switch to MENU mode"""
