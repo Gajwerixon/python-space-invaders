@@ -18,7 +18,7 @@ class EffectSystem:
             anchor=anchor
         )
 
-    def _create_animated_effect(self, asset_key, pos, full_duration, frame_duration, name, anchor='center'):
+    def _create_animated_effect(self, pos, full_duration, frame_duration, asset_key, name, anchor='center'):
         """Create animated effect"""
         return AnimatedEffect(
             self.assets[asset_key],
@@ -27,7 +27,6 @@ class EffectSystem:
             frame_duration,
             name,
             self.group,
-            anchor=anchor
         )
 
     # --- Player ---
@@ -63,4 +62,4 @@ class EffectSystem:
 
     def alien_bullet_player_fx(self, pos, full_duration=1.5, frame_duration=0.125):
         """Spawn explosion AnimtedEffect after player was hit"""
-        self._create_animated_effect('player_explosion', pos, full_duration, frame_duration, 'player_explosion')
+        self._create_animated_effect(pos, full_duration, frame_duration, 'player_explosion', 'player_explosion')
