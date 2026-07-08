@@ -76,13 +76,17 @@ class AssetsSystem:
                 'dead': self.load_sound('assets/sounds/player_dead.mp3', 0.25)
             },
             'alien': [
-                self.load_sound('assets/sounds/alien_movement_1.wav'),
-                self.load_sound('assets/sounds/alien_movement_2.wav'),
-                self.load_sound('assets/sounds/alien_movement_3.wav'),
-                self.load_sound('assets/sounds/alien_movement_4.wav')
+                self.load_sound('assets/sounds/alien_movement_1.wav', 0.2),
+                self.load_sound('assets/sounds/alien_movement_2.wav', 0.2),
+                self.load_sound('assets/sounds/alien_movement_3.wav', 0.2),
+                self.load_sound('assets/sounds/alien_movement_4.wav', 0.2)
             ],
             'ufo': {
-                'movement': self.load_sound('assets/sounds/ufo_movement.wav')
+                'movement': self.load_sound('assets/sounds/ufo_movement.wav', 0.2)
+            },
+            'ui': {
+                'next_phase': self.load_sound('assets/sounds/next_phase_sound.mp3', 0.2),
+                'switch_option': self.load_sound('assets/sounds/switch_option_sound.mp3', 0.2)
             },
         }
 
