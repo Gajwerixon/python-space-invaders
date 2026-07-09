@@ -141,7 +141,12 @@ class Game:
         score_1 = self.level.score_1 if self.level else 0
         score_2 = self.level.score_2 if self.level else 0
         lives = self.level.lives if self.level else 3
-        self.hud.draw_hud(score_1, score_2, self.high_score, lives, self.credit, self.surface)
+
+        show_lives = self.mode in ('LEVEL', 'GAME_OVER')
+
+        self.hud.draw_hud(
+            score_1, score_2, self.high_score, lives, 
+            self.credit, self.surface, show_lives=show_lives)
         
         pygame.display.flip()
 
