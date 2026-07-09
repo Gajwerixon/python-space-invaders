@@ -39,7 +39,7 @@ class HUD:
     def draw_bottom_hud(self, lives, credits, surface, show_lives):
         if show_lives:
             self.draw_lives(surface, lives)
-            
+
         self.draw_credit(surface, credits)
 
     def draw_score(self, text, value, pos, anchor, surface):
@@ -51,19 +51,22 @@ class HUD:
         self.draw_number(digits, start_pos, 'top_hud', surface)
 
     def draw_lives(self, surface, lives):
-        text_rect = self.blit_text(surface, str(lives), 
-                       (BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y']),
-                       'topleft')
+        text_rect = self.blit_text(
+            surface, 
+            str(lives), 
+            (BOTTOM_HUD['left_margin'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y']),
+            'topleft'
+        )
         
         x, y = text_rect.topright
-        x_start = x + 35
+        x_start = x + 28
         
         if (lives - 1) != 0:
             for i in range(lives - 1):
                 surface.blit(self.ship_img, (x_start + i * BOTTOM_HUD['ship_offset'], y))
 
     def draw_credit(self, surface, credits):
-        pos = (WIDTH - BOTTOM_HUD['margin_x'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y'])
+        pos = (WIDTH - BOTTOM_HUD['right_margin'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y'])
         rect = self.blit_text(surface, f'C R E D I T', pos, 'topright')
 
         digits = self.format_number(credits, length=2)
