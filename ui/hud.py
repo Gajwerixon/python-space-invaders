@@ -7,9 +7,9 @@ class HUD:
         self.digits = digits
         self.ship_img = ship_img
 
-    def draw_hud(self, score_1, score_2, high_score, lives, credit, surface):
+    def draw_hud(self, score_1, score_2, high_score, lives, credit, surface, show_lives):
         self.draw_top_hud(score_1, score_2, high_score, surface)
-        self.draw_bottom_hud(lives, credit, surface)
+        self.draw_bottom_hud(lives, credit, surface, show_lives)
 
     def draw_top_hud(self, score_1, score_2, high_score, surface):
         self.draw_score(
@@ -36,8 +36,10 @@ class HUD:
             surface
         )
 
-    def draw_bottom_hud(self, lives, credits, surface):
-        self.draw_lives(surface, lives)
+    def draw_bottom_hud(self, lives, credits, surface, show_lives):
+        if show_lives:
+            self.draw_lives(surface, lives)
+            
         self.draw_credit(surface, credits)
 
     def draw_score(self, text, value, pos, anchor, surface):
