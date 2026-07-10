@@ -3,7 +3,7 @@ from config import LINES, PLAY_AREA
 from entities.line_blocks import LineBlocks
 
 class LineSystem:
-    """LineBlocks class manager"""
+    """LineBlocks system class"""
     def __init__(self, group):
         self.line_group = group
 
