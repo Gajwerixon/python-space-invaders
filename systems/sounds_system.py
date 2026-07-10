@@ -19,11 +19,11 @@ class SoundSystem:
         pass
 
     # --- UFO ---
-    def ufo_movement_play(self):
-        pass
+    def ufo_movement_start(self):
+        self.sounds['ufo']['movement'].play(loops=-1)
 
-    def ufo_dead_play(self):
-        pass
+    def ufo_movement_stop(self):
+        self.sounds['ufo']['movement'].stop()
 
     # --- UI ---
     def ui_next_phase_play(self):
