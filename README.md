@@ -8,6 +8,7 @@ Focused on:
 ---
 
 ## 🎥 Gameplay Preview
+<img width="426" height="240" alt="Space_Invadersss" src="https://github.com/user-attachments/assets/4c03e10a-cd7f-4f38-a00d-fd8e90e7d1b4" />
 
 
 ## 🎮 Features
