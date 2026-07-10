@@ -4,6 +4,7 @@ from ui.animated_text import AnimatedText
 from config import PLAY_AREA, LETTER_TIMER
 
 class GameOver:
+    """GameOver class"""
     def __init__(self, font):
         self.font = font
         self.new_game_timer = TimerSystem(5)
@@ -16,6 +17,7 @@ class GameOver:
         self.start_timer = True
 
     def update(self, dt):
+        """Update GameOver """
         self.new_game_timer.update(dt)
         self.letter_timer.update(dt)
 
@@ -34,6 +36,7 @@ class GameOver:
                 return
 
     def draw(self, surface):
+        """Draw GameOver elements on the screen"""
         element_surface = self.font.render(self.text.display_text, True, 'white')
         element_rect = element_surface.get_rect(**{self.text.anchor: self.text.pos})
         surface.blit(element_surface, element_rect)
