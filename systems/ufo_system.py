@@ -17,7 +17,6 @@ class UfoSystem:
         self.current_spawn_pos = 0
 
         self.score = UFO['score_values']
-        self.current_score_index = 0
 
         self.events = []
 
@@ -29,9 +28,8 @@ class UfoSystem:
         if self.phase == 'SPAWN_DELAY':
             self.spawn_ufo_timer.update(dt)
             if not self.spawn_ufo_timer.active:
-                self.spawn_new_ufo()
-                self.phase = 'ALIVE'
-                self.events.append('UFO_SPAWNED')
+                self.events.append('SPAWN_UFO')
+                self.phase = 'SPAWNING'
 
         elif self.phase == 'ALIVE':
             self.ufo.update(dt)
@@ -39,16 +37,23 @@ class UfoSystem:
                 self.handle_ufo_dead()
                 self.events.append('UFO_DEAD')
 
-    def spawn_new_ufo(self):
+    def spawn_new_ufo(self, player_shots_count):
         """Spawn new Ufo"""
+        shot_index = player_shots_count % len(self.score)
+        assigned_points = self.score[shot_index]
+
+        spawn_position = self.spaw_pos[self.current_spawn_pos]
+
         self.ufo = Ufo(
             self.image, 
-            self.spaw_pos[self.current_spawn_pos], 
+            spawn_position, 
             self.direction_x,
             self.speed,
-            self.score[self.current_score_index],
+            assigned_points,
             self.group
         )
+
+        self.phase = 'ALIVE'
     
     def outside_play_arena(self):
         """Check if Ufo is outside play arena"""
@@ -69,7 +74,5 @@ class UfoSystem:
             self.ufo = None
 
         self.direction_x *= -1
-
-        self.current_score_index = (self.current_score_index + 1) % len(self.score)
         
         self.current_spawn_pos = 1 - self.current_spawn_pos
