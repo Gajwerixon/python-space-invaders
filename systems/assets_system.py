@@ -41,6 +41,7 @@ class AssetsSystem:
         return aliens
     
     def load_effects_assets(self):
+        """Load effects assets"""
         return {
             'player_bullet_fx': self.load_asset('assets/entities/effect/player/player_bullet_fx.png', 
                                                 EXPLOSIONS['player_bullet_miss_size']),
@@ -94,6 +95,7 @@ class AssetsSystem:
         }
 
     def load_font_assets(self):
+        """Load font assets"""
         return pygame.font.Font('assets/fonts/font.ttf', FONT_SIZE)
     
     def load_font_images_assets(self):
