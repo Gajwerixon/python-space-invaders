@@ -54,6 +54,7 @@ class UfoSystem:
         )
 
         self.phase = 'ALIVE'
+        self.events.append('UFO_SPAWNED')
     
     def outside_play_arena(self):
         """Check if Ufo is outside play arena"""
