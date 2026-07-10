@@ -72,21 +72,24 @@ class AssetsSystem:
         """Load sound assets"""
         return {
             'player': {
-                'shoot': self.load_sound('assets/sounds/player_shoot.wav', 0.25),
-                'dead': self.load_sound('assets/sounds/player_dead.mp3', 0.25)
+                'shoot': self.load_sound('assets/sounds/player_shoot.wav'),
+                'dead': self.load_sound('assets/sounds/player_dead.mp3')
             },
-            'alien': [
-                self.load_sound('assets/sounds/alien_movement_1.wav', 0.2),
-                self.load_sound('assets/sounds/alien_movement_2.wav', 0.2),
-                self.load_sound('assets/sounds/alien_movement_3.wav', 0.2),
-                self.load_sound('assets/sounds/alien_movement_4.wav', 0.2)
-            ],
+            'alien': {
+                'movement':[
+                    self.load_sound('assets/sounds/alien_movement_1.wav'),
+                    self.load_sound('assets/sounds/alien_movement_2.wav'),
+                    self.load_sound('assets/sounds/alien_movement_3.wav'),
+                    self.load_sound('assets/sounds/alien_movement_4.wav'),
+                ],
+                'dead': self.load_sound('assets/sounds/alien_dead.wav', 0.1)
+            },
             'ufo': {
-                'movement': self.load_sound('assets/sounds/ufo_movement.wav', 0.2)
+                'movement': self.load_sound('assets/sounds/ufo_movement.wav')
             },
             'ui': {
-                'next_phase': self.load_sound('assets/sounds/next_phase_sound.mp3', 0.2),
-                'switch_option': self.load_sound('assets/sounds/switch_option_sound.mp3', 0.2)
+                'next_phase': self.load_sound('assets/sounds/next_phase_sound.mp3'),
+                'switch_option': self.load_sound('assets/sounds/switch_option_sound.mp3')
             },
         }
 
@@ -105,7 +108,7 @@ class AssetsSystem:
         img = pygame.image.load(path).convert_alpha()
         return pygame.transform.scale(img, size)
     
-    def load_sound(self, path, volume=1.0):
+    def load_sound(self, path, volume=0.2):
         """Load sound asset"""
         sound = pygame.mixer.Sound(path)
         sound.set_volume(volume)
