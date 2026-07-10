@@ -9,7 +9,7 @@ class AnimatedText:
         self.done = False
 
     def skip_animation(self):
-        """Skip animation"""
+        """Skip the animation"""
         self.done = True
 
     def update(self):
