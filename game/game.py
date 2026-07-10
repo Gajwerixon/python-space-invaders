@@ -116,7 +116,7 @@ class Game:
 
         elif self.mode == 'LEVEL' and self.level:
             self.level.update(dt)
-            if self.level.phase == 'GAME_OVER':
+            if self.level.state == 'GAME_OVER':
                 self.switch_to_game_over()
 
         elif self.mode == 'GAME_OVER' and self.game_over:
