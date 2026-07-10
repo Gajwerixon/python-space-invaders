@@ -100,6 +100,7 @@ class Level:
         self.handle_collision_events()
         self.handle_aliens_events()
         self.handle_player_events()
+        self.handle_ufo_events()
 
     def handle_collision_events(self):
         for event in self.collision_system.events:
@@ -140,6 +141,16 @@ class Level:
             
         self.player.events.clear()
 
+    def handle_ufo_events(self):
+        """Handle UfoSystem events"""
+        for event in self.ufo_system.events:
+            if event == 'UFO_SPAWNED':
+                self.sound_system.ufo_movement_start()
+            elif event == 'UFO_DEAD':
+                self.sound_system.ufo_movement_stop()
+
+        self.ufo_system.events.clear()
+
     def try_spawn_player(self):
         """Try spawn new player"""
         if not self.spawn_player_timer.active:
@@ -161,6 +172,7 @@ class Level:
             self.spawn_player_timer.start()
         else:
             self.phase = 'GAME_OVER'
+            self.sound_system.ufo_movement_stop()
 
     def spawn_player(self):
         """Spawn new player"""
