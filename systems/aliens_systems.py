@@ -7,11 +7,11 @@ from systems.timer_system import TimerSystem
 
 class AliensSystem:
     """AlienSystem class"""
-    def __init__(self, assets, alien_bullet_group, alien_group, level):
+    def __init__(self, assets, alien_bullet_group, alien_group, current_level):
         self.assets = assets
         self.alien_bullets_group = alien_bullet_group
         self.alien_group = alien_group
-        self.level = level
+        self.current_level = current_level
 
         self.start_pos = (80, PLAY_AREA.bottom - 350)
         self.aliens_formation_list = []
@@ -125,7 +125,7 @@ class AliensSystem:
         """Get base speed"""
         base_delay = ALIENS_MOVEMENT["timer"]
 
-        level_multiplier = 1 - (self.level - 1) * 0.05
+        level_multiplier = 1 - (self.current_level - 1) * 0.05
         level_multiplier = max(level_multiplier, 0.6)
 
         delay = base_delay * level_multiplier
