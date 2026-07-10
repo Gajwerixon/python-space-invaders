@@ -10,13 +10,18 @@ class Menu:
         self.font = font
         self.sounds_system = sounds_system
 
+        # Menu variables
         self.animation_done = False
         self.selection_confirmed = False
         self.player_options = [1, 2]
         self.selected_option_idx = 0
 
-        self.letter_timer = TimerSystem(LETTER_TIMER)
-        self.static_elements = [('S E L E C T  N U M B E R  O F  P L A Y E R S', (WIDTH / 2, HEIGHT / 2 - 25))]
+        # Text
+        self.static_elements = [
+            ('S E L E C T  N U M B E R  O F  P L A Y E R S', 
+             (WIDTH / 2, HEIGHT / 2 - 25)
+            )
+        ]
         self.animated_elements = [
             AnimatedText('<  1   O R   2   P L A Y E R S  >', 
                          (WIDTH / 2 - 170, HEIGHT / 2 + 60)),
@@ -25,6 +30,9 @@ class Menu:
             AnimatedText('2  P L A Y E R S   2   C O I N S',
                          (WIDTH / 2 - 144, HEIGHT / 2 + 180))
         ]
+
+        # Timer
+        self.letter_timer = TimerSystem(LETTER_TIMER)
 
     def handle_events(self, event):
         """Handle Menu events"""
@@ -64,7 +72,7 @@ class Menu:
             self.animation_done = True
 
     def draw(self, surface):
-        """Draw Menu"""
+        """Draw Menu elements on screen"""
         for text, pos in self.static_elements:
             self.draw_element(text, pos, surface)
         
