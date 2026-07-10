@@ -121,6 +121,10 @@ class Level:
                 self.score_1 += event[1]
                 self.aliens_system.update_speed()
                 self.sound_system.alien_dead_play()
+
+            elif event_type == 'ALIEN_TOUCH_BOTTOM':
+                self.phase = 'GAME_OVER'
+                self.sound_system.ufo_movement_stop()
         
         self.collision_system.events.clear()
 
