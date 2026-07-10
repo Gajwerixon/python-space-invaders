@@ -1,6 +1,6 @@
 import pygame
 
-from config import *
+from config import LETTER_TIMER, ADVANCE_TABLE_TRANSITION_TIMER, WIDTH
 from systems.timer_system import TimerSystem
 from ui.animated_text import AnimatedText
 
@@ -11,12 +11,15 @@ class AdvanceTable:
         self.alien = alien_assets
         self.ufo = ufo_image
 
+        # Phases
         self.phase = 'INTRO'
         self.continue_to_game = False
 
+        # Timers
         self.letter_timer = TimerSystem(LETTER_TIMER)
         self.transition_timer = TimerSystem(ADVANCE_TABLE_TRANSITION_TIMER)
 
+        # Texts
         self.intro_text = [ 
             AnimatedText('P L A Y', (WIDTH / 2 - 45, 200)),
             AnimatedText('S P A C E       I N V A D E R S', (WIDTH / 2 - 175, 280))
@@ -34,6 +37,7 @@ class AdvanceTable:
             (WIDTH / 2, 380)
         )
 
+        # Images
         self.aliens_images = [
             (self.ufo, (WIDTH / 2 - 100, 430)),
             (self.alien['alien_3']['images'][1], (WIDTH / 2 - 100, 480)),
@@ -57,7 +61,7 @@ class AdvanceTable:
                 self.continue_to_game = True
 
     def update(self, dt):
-        """Update advance table"""
+        """Update AdvanceTable based on current phases"""
         self.letter_timer.update(dt)
         self.transition_timer.update(dt)
 
@@ -74,7 +78,7 @@ class AdvanceTable:
             self.update_finished()
 
     def draw(self, surface):
-        """Draw advance table"""
+        """Draw AdvanceTable elements on the screen"""
         self.draw_text_elements(self.intro_text, surface)
 
         if self.phase in ('SCORE_TABLE', 'FINISHED'):
