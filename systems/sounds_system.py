@@ -13,10 +13,10 @@ class SoundSystem:
 
     # --- Aliens ---
     def alien_dead_play(self):
-        pass
+        self.sounds['alien']['dead'].play()
 
-    def aliens_movement_play(self):
-        pass
+    def aliens_movement_play(self, index):
+        self.sounds['alien']['movement'][index].play()
 
     # --- UFO ---
     def ufo_movement_start(self):
