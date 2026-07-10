@@ -16,16 +16,19 @@ class Player(pygame.sprite.Sprite):
         )
         self.pos = pygame.Vector2(self.rect.center)
 
+        # Movement
         self.direction = pygame.Vector2()
         self.speed = PLAYER['speed']
         self.space_relase = True
 
+        # Bullets
         self.bullets = player_bullets_group
 
+        # Events
         self.events = []
 
     def update(self, dt):
-        """Update player"""
+        """Update Player"""
         self.input()
         self.movement(dt)
 
