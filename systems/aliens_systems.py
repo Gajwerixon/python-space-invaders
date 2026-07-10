@@ -38,7 +38,7 @@ class AliensSystem:
             return
         
         self.update_aliens_formation()
-
+        
         if len(self.alien_bullets_group) <= 0 and self.shooting_enabled:
             self.create_bullet()
 
@@ -57,8 +57,6 @@ class AliensSystem:
 
         alien.rect.center = alien.pos
         alien.image = alien.images[self.animation_index]
-
-        # self.events.append('PLAY_NEXT_SOUND')
 
         if (alien.rect.right >= PLAY_AREA.right - ALIENS_FORMATION['margin'] or 
             alien.rect.left <= ALIENS_FORMATION['margin']):
@@ -84,6 +82,8 @@ class AliensSystem:
         """Reset index and update formation state at"""
         self.current_alien = 0
         self.animation_index = 1 - self.animation_index
+
+        self.events.append("PLAY_NEXT_SOUND")
 
         if self.wall_collision_triggered:
             self.state = "move_vertical"
@@ -118,7 +118,7 @@ class AliensSystem:
             return
         
         alive_ratio = len(self.alien_group) / self.num_aliens
-        new_delay = self.base_speed * (0.3 + 0.7 * alive_ratio)
+        new_delay = self.base_speed * (0.9 + 0.7 * alive_ratio)
         self.aliens_move_timer.set_duration(new_delay)
 
     def get_base_speed(self):
