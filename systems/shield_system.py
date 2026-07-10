@@ -2,7 +2,7 @@ from config import SHIELDS, PLAY_AREA
 from entities.shield_block import ShieldBlock
 
 class ShieldSystem:
-    """Shields class manager"""
+    """ShieldBlocks system class"""
     def __init__(self, group):
         self.shield_block_group = group
 
