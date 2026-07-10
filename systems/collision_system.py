@@ -3,7 +3,7 @@ import pygame
 from config import PLAY_AREA
 
 class CollisionSystem:
-    """Collision System class"""
+    """Collision System class - bounding box intersection logic between game entity groups"""
     def __init__(self, groups, effect_system):
         self.groups = groups
         self.effect_system = effect_system
@@ -57,7 +57,13 @@ class CollisionSystem:
 
     def player_bullets_shield_blocks_collision(self):
         """Collision between player_bullets and shield_blocks"""
-        collision = pygame.sprite.groupcollide(self.groups['player_bullets'], self.groups['shields'], True, True)
+        collision = pygame.sprite.groupcollide(
+            self.groups['player_bullets'], 
+            self.groups['shields'], 
+            True, 
+            True
+        )
+
         for bullet, shields in collision.items():
             shields[0].damage_shield('player')
             self.effect_system.player_bullets_shield_blocks_fx(
@@ -100,9 +106,13 @@ class CollisionSystem:
     # --- Aliens ---
     def alien_line_blocks_collision(self):
         """Collision between alien_bullets and line_blocks"""
-        collision = pygame.sprite.groupcollide(self.groups['alien_bullets'], 
-                                               self.groups['lines'],
-                                               True, False)
+        collision = pygame.sprite.groupcollide(
+            self.groups['alien_bullets'], 
+            self.groups['lines'],
+            True, 
+            False
+        )
+
         for _, line in collision.items():
             line[0].apply_damage()
             self.effect_system.alien_bullets_miss_fx(
@@ -112,7 +122,13 @@ class CollisionSystem:
 
     def alien_bullets_player_collision(self):
         """Collision between alien_bullets and player"""
-        collision = pygame.sprite.groupcollide(self.groups['player'], self.groups['alien_bullets'], True, True)
+        collision = pygame.sprite.groupcollide(
+            self.groups['player'], 
+            self.groups['alien_bullets'], 
+            True, 
+            True
+        )
+
         for player, _ in collision.items():
             self.effect_system.alien_bullet_player_fx(
                 player.rect.center,
@@ -123,7 +139,13 @@ class CollisionSystem:
 
     def alien_bullets_shield_blocks_collision(self):
         """Collision between alien_bullets and shield_blocks"""
-        collision = pygame.sprite.groupcollide(self.groups['alien_bullets'], self.groups['shields'], True, True)
+        collision = pygame.sprite.groupcollide(
+            self.groups['alien_bullets'], 
+            self.groups['shields'], 
+            True, 
+            True
+        )
+
         for bullet, shields in collision.items():
             shields[0].damage_shield('alien')
             self.effect_system.alien_bullet_shield_fx(
@@ -133,7 +155,13 @@ class CollisionSystem:
 
     def alien_shield_blocks_collision(self):
         """Collision between alien and shield"""
-        collision = pygame.sprite.groupcollide(self.groups['aliens'], self.groups['shields'], False, False)
+        collision = pygame.sprite.groupcollide(
+            self.groups['aliens'], 
+            self.groups['shields'], 
+            False, 
+            False
+        )
+
         for _, blocks in collision.items():
             blocks[0].damage_shield_alien()
 
