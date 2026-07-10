@@ -6,17 +6,19 @@ from entities.alien_bullet import AlienBullet
 from systems.timer_system import TimerSystem
 
 class AliensSystem:
-    """System zarządzający formacją kosmitów (w stylu Space Invaders)"""
-    def __init__(self, assets, alien_bullet_group, alien_group):
+    """AlienSystem class"""
+    def __init__(self, assets, alien_bullet_group, alien_group, level):
         self.assets = assets
         self.alien_bullets_group = alien_bullet_group
         self.alien_group = alien_group
+        self.level = level
 
         self.start_pos = (80, PLAY_AREA.bottom - 350)
         self.aliens_formation_list = []
 
         self.direction = pygame.Vector2(1, 0)
-        self.aliens_move_timer = TimerSystem(ALIENS_MOVEMENT['timer'])
+        self.base_speed = self.get_base_speed()
+        self.aliens_move_timer = TimerSystem(self.base_speed)
 
         self.state = 'move_horizontal'
         self.current_alien = 0
@@ -102,7 +104,7 @@ class AliensSystem:
             )
 
     def get_lowest_aliens(self):
-        """Zwraca listę najniższych żywych obcych z każdej kolumny"""
+        """Get the lowest alien"""
         columns = {}
         for alien in self.alien_group:
             col = alien.grid_pos[1]
@@ -116,8 +118,19 @@ class AliensSystem:
             return
         
         alive_ratio = len(self.alien_group) / self.num_aliens
-        new_delay = ALIENS_MOVEMENT['timer'] * (0.3 + 0.7 * alive_ratio)
+        new_delay = self.base_speed * (0.3 + 0.7 * alive_ratio)
         self.aliens_move_timer.set_duration(new_delay)
+
+    def get_base_speed(self):
+        """Get base speed"""
+        base_delay = ALIENS_MOVEMENT["timer"]
+
+        level_multiplier = 1 - (self.level - 1) * 0.05
+        level_multiplier = max(level_multiplier, 0.6)
+
+        delay = base_delay * level_multiplier
+
+        return delay
 
     def create_alien_formation(self):
         """Create formation"""
