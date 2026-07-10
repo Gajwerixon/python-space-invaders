@@ -1,6 +1,6 @@
 from config import LINES, PLAY_AREA
 
-from entities.line_blocks import LineBlocks
+from entities.line_block import LineBlocks
 
 class LineSystem:
     """LineBlocks system class"""
