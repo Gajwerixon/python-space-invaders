@@ -9,17 +9,17 @@ from ui.advance_table import AdvanceTable
 from systems.sounds_system import SoundSystem
 
 class Game:
-    """Game class"""
+    """Main game controller handling the state machine, updates, and rendering."""
     def __init__(self):    
         self.surface = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption('Space_Invaders')
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # Game variable
+        # Game variables
         self.mode = 'MENU'
         self.num_players = None
-        self.credit = 0
+        self.credits = 0
         self.high_score = 0
 
         # Assets and HUD
@@ -27,18 +27,18 @@ class Game:
         self.sound_system = SoundSystem(self.assets.sounds)
         self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font, self.assets.font_images)
 
-        # None Objects
+        # State Objects
         self.menu = None
         self.advance_table = None
         self.level = None
         self.game_over = None
         self.groups = None
 
-        # Switch to the MENU phase at the beggining
+        # Switch to the MENU phase at the beginning
         self.switch_to_menu()
 
-    # Main game functions
     def run(self):
+        """Main game loop"""
         while self.running:
             dt = self.clock.tick(60) / 1000
             self.handle_events()
@@ -46,7 +46,7 @@ class Game:
             self.draw()
 
     def handle_events(self):
-        """Handle game events"""
+        """Handle events"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -57,7 +57,8 @@ class Game:
             elif self.mode == 'ADVANCE_TABLE' and self.advance_table:
                 self.advance_table.handle_events(event)
 
-    # --- Switches ---
+    # --- State Switches ---
+
     def switch_to_menu(self):
         """Switch to MENU mode"""
         self.level = None
@@ -81,7 +82,7 @@ class Game:
         self.mode = 'ADVANCE_TABLE'
 
     def switch_to_level(self):
-        """Switch to LEVEL mode"""
+        """Switch to LEVEL mode and initialize game entities"""
         self.advance_table = None
         
         self.groups = self.create_groups()
@@ -90,7 +91,7 @@ class Game:
         self.mode = 'LEVEL'
 
     def switch_to_game_over(self):
-        """Switch to GAME_OVER mode"""
+        """Switch to GAME_OVER mode and update high score"""
         if self.level.score_1 > self.high_score:
             self.high_score = self.level.score_1
             
@@ -98,6 +99,7 @@ class Game:
         self.mode = 'GAME_OVER'
 
     # --- Update and Draw functions ---
+
     def update(self, dt):
         """Update game"""
         if self.mode == 'MENU' and self.menu:
@@ -139,7 +141,7 @@ class Game:
             self.level.draw(self.surface)
             self.game_over.draw(self.surface)
 
-        # HUD
+        # HUD rendering data setup
         score_1 = self.level.score_1 if self.level else 0
         score_2 = self.level.score_2 if self.level else 0
         lives = self.level.lives if self.level else 3
@@ -152,9 +154,10 @@ class Game:
         
         pygame.display.flip()
 
-    # --- Help function ---
+    # --- Helper methods ---
+    
     def create_groups(self):
-        """Create groups"""
+        """Initialize and return standard Pygame sprite groups for the level"""
         return {
             'lines': pygame.sprite.Group(),
             'shields': pygame.sprite.Group(),
