@@ -18,7 +18,7 @@ class Ufo(pygame.sprite.Sprite):
         self.movement(dt)
 
     def movement(self, dt):
-        """Movement"""
+        """Ufo Movement"""
         self.pos.x += self.direction_x * self.speed * dt
         self.rect.centerx = self.pos.x
         self.rect.centery = self.pos.y
