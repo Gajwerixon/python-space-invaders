@@ -11,14 +11,18 @@ class AlienBullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = pos)
         self.pos = pygame.Vector2(self.rect.center)
 
+        # Speed
         self.speed = ALIENS_SHOOTING['speed']
 
+        # Animation
         self.animation_frame = 0
+
+        # Timer
         self.image_timer = TimerSystem(ALIENS_SHOOTING['frames_time'])
         self.image_timer.start()
 
     def update(self, dt):
-        """Update bullet"""
+        """Update AlienBullet"""
         self.image_timer.update(dt)
         self.movement(dt)
         self.change_image_frame()
@@ -27,12 +31,14 @@ class AlienBullet(pygame.sprite.Sprite):
         """Change image frame"""
         if not self.image_timer.active:
             self.animation_frame += 1
+
             if self.animation_frame >= len(self.images):
                 self.animation_frame = 0
+
             self.image = self.images[self.animation_frame]
             self.image_timer.start()
 
     def movement(self, dt):
-        """Bullet movement"""
+        """AlienBullet movement"""
         self.pos.y += self.speed * dt
         self.rect.center = self.pos
