@@ -1,28 +1,33 @@
-import pygame
-
 class SoundSystem:
+    """Sound system class"""
     def __init__(self, sounds):
         self.sounds = sounds
 
     # --- Player ---
     def player_shoot_play(self):
+        """Player shoot sound"""
         self.sounds['player']['shoot'].play()
 
     def player_dead_play(self):
+        """Player dead sound"""
         self.sounds['player']['dead'].play()
 
     # --- Aliens ---
     def alien_dead_play(self):
+        """Alien dead sound"""
         self.sounds['alien']['dead'].play()
 
     def aliens_movement_play(self, index):
+        """Alien movement sound"""
         self.sounds['alien']['movement'][index].play()
 
     # --- UFO ---
     def ufo_movement_start(self):
+        """Ufo movement loop start"""
         self.sounds['ufo']['movement'].play(loops=-1)
 
     def ufo_movement_stop(self):
+        """Ufo movement loop stop"""
         self.sounds['ufo']['movement'].stop()
 
     # --- UI ---
