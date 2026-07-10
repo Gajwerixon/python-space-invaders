@@ -2,20 +2,23 @@ import pygame
 from systems.timer_system import TimerSystem
 
 class AnimatedEffect(pygame.sprite.Sprite):
-    """Effect class"""
+    """AnimatedEffect class"""
     def __init__(self, images, pos, full_duration, frame_duration, type, groups):
         super().__init__(groups)
         self.images = images
         self.image = self.images[0]
         self.rect = self.image.get_rect(center=pos)
 
+        # Timers
         self.animation_timer = TimerSystem(full_duration)
         self.frame_animation_timer = TimerSystem(frame_duration)
         self.animation_index = 0
 
+        # Start Timers
         self.animation_timer.start()
         self.frame_animation_timer.start()
 
+        # Type
         self.type = type
 
     def update(self, dt):
