@@ -8,7 +8,7 @@ class Alien(pygame.sprite.Sprite):
         self.image = images[0]
         self.rect = self.image.get_rect(center = pos)
         self.pos = pygame.Vector2(self.rect.center)
-
+        
         self.bullets_images = bullets
         self.score = score
         self.grid_pos = grid_pos
