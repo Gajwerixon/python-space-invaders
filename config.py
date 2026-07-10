@@ -152,8 +152,6 @@ UFO = {
     ]
 }
 
-# Menu
+# UI
 LETTER_TIMER = 0.0625
-
-# Advance Table
 ADVANCE_TABLE_TRANSITION_TIMER = 1.25
