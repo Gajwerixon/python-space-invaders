@@ -23,6 +23,7 @@ class Level:
         self.score_2 = 0
         self.current_level = 1
         self.player_shots_count = 0
+        self.alien_movement_sound = 0
 
         self.player = None
         self.shield_system = None
@@ -80,6 +81,8 @@ class Level:
 
     def update_next_level(self, dt):
         """Update next level"""
+        self.sound_system.ufo_movement_stop()
+
         self.next_level_timer.update(dt)
         if self.next_level_timer.active:
             if self.player:
@@ -128,7 +131,9 @@ class Level:
                 self.phase = 'NEXT_LEVEL'
                 self.next_level_timer.start()
             elif event == 'PLAY_NEXT_SOUND':
-                pass
+                self.sound_system.aliens_movement_play(self.alien_movement_sound)
+                self.alien_movement_sound += 1
+                self.alien_movement_sound = 4 - self.alien_movement_sound 
         
         self.aliens_system.events.clear()
 
