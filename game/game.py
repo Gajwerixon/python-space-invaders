@@ -150,7 +150,7 @@ class Game:
 
         self.hud.draw_hud(
             score_1, score_2, self.high_score, lives, 
-            self.credit, self.surface, show_lives=show_lives)
+            self.credits, self.surface, show_lives=show_lives)
         
         pygame.display.flip()
 
