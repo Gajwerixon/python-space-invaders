@@ -19,6 +19,8 @@ class AliensSystem:
         self.direction = pygame.Vector2(1, 0)
         self.base_speed = self.get_base_speed()
         self.aliens_move_timer = TimerSystem(self.base_speed)
+        self.max_number_of_bullets = 1
+        self.shoot_timer = TimerSystem(1)
 
         self.state = 'move_horizontal'
         self.current_alien = 0
@@ -32,6 +34,7 @@ class AliensSystem:
     def update(self, dt):
         """Update formation"""
         self.aliens_move_timer.update(dt)
+        self.shoot_timer.update(dt)
 
         if not self.alien_group:
             self.events.append('ALL_ALIENS_DEAD')
@@ -39,8 +42,7 @@ class AliensSystem:
         
         self.update_aliens_formation()
         
-        if len(self.alien_bullets_group) <= 0 and self.shooting_enabled:
-            self.create_bullet()
+        self.formation_shoot()
 
     def update_aliens_formation(self):
         """Update alien formation"""
@@ -64,6 +66,28 @@ class AliensSystem:
 
         self.advance_cycle()
         self.aliens_move_timer.start()
+
+    def formation_shoot(self):
+        """Formatin shoot base of number of aliens"""
+        alive_ratio = len(self.alien_group) / self.num_aliens
+
+        if alive_ratio >= 0.4:
+            self.max_number_of_bullets = 1
+            self.shoot_timer.set_duration(1.2)
+        elif alive_ratio >= 0.2:
+            self.max_number_of_bullets = 2
+            self.shoot_timer.set_duration(0.8)
+        else:
+            self.max_number_of_bullets = 3
+            self.shoot_timer.set_duration(0.4)
+
+        if (
+            self.shooting_enabled
+            and len(self.alien_bullets_group) < self.max_number_of_bullets
+            and not self.shoot_timer.active
+        ):
+            self.create_bullet()
+            self.shoot_timer.start()
 
     def advance_cycle(self):
         """Advance cycle"""
