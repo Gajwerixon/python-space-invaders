@@ -3,7 +3,7 @@ import pygame
 from config import SHIELDS, EXPLOSIONS
 
 class ShieldBlock(pygame.sprite.Sprite):
-    """Shield Blocks class"""
+    """Shield Block class"""
     def __init__(self, pos, shield_id, grid_position, groups):
         super().__init__(groups)
         self.shield_blocks_group = groups
