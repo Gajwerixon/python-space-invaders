@@ -27,12 +27,14 @@ class Game:
         self.sound_system = SoundSystem(self.assets.sounds)
         self.hud = HUD(self.assets.player['player_img_hud'], self.assets.font, self.assets.font_images)
 
+        # None Objects
         self.menu = None
         self.advance_table = None
         self.level = None
         self.game_over = None
         self.groups = None
 
+        # Switch to the MENU phase at the beggining
         self.switch_to_menu()
 
     # Main game functions
