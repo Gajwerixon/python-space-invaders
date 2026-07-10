@@ -21,6 +21,7 @@ class Level:
         self.lives = 3
         self.score_1 = 0
         self.score_2 = 0
+        self.current_level = 1
 
         self.player = None
         self.shield_system = None
@@ -71,6 +72,7 @@ class Level:
     def update_reset(self, dt):
         """Update reset"""
         self.update_groups(dt)
+        self.ufo_system.update(dt)
 
         if self.try_spawn_player():
             self.phase = 'GAMEPLAY'
@@ -83,7 +85,8 @@ class Level:
                 self.player.update(dt)
             return
         
-        self.handle_next_level()
+        self.current_level += 1
+        self.create_level()
         self.phase = 'START'    
 
     def update_groups(self, dt):
@@ -104,9 +107,11 @@ class Level:
             if event_type == "PLAYER_DEAD":
                 self.handle_player_dead()
                 self.sound_system.player_dead_play()
+
             elif event_type == 'UFO_DEAD':
                 self.ufo_system.handle_ufo_dead()
                 self.score_1 += event[1]
+
             elif event_type == 'ALIEN_DEAD':
                 self.score_1 += event[1]
                 self.aliens_system.update_speed()
@@ -175,7 +180,8 @@ class Level:
         self.aliens_system = AliensSystem(
             self.assets.aliens, 
             self.groups['alien_bullets'], 
-            self.groups['aliens']
+            self.groups['aliens'],
+            self.current_level
         )
         self.ufo_system = UfoSystem(self.assets.ufo['image'], self.groups['ufo'])
 
