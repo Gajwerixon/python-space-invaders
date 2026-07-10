@@ -22,6 +22,8 @@ class CollisionSystem:
         self.alien_bullets_player_collision()
         self.alien_bullets_shield_blocks_collision()
         self.alien_shield_blocks_collision()
+        self.alien_play_area_bottom_collision()
+        self.alien_player_collision()
 
         # Other
         self.player_bullets_alien_bullets_collision()
@@ -134,3 +136,20 @@ class CollisionSystem:
         collision = pygame.sprite.groupcollide(self.groups['aliens'], self.groups['shields'], False, False)
         for _, blocks in collision.items():
             blocks[0].damage_shield_alien()
+
+    def alien_play_area_bottom_collision(self):
+        """Collision between alien and PLAY_AREA bottom"""
+        for alien in self.groups['aliens']:
+            if alien.rect.bottom >= PLAY_AREA.bottom:
+                self.events.append(('ALIEN_TOUCH_BOTTOM', 0))
+
+    def alien_player_collision(self):
+        """Collision between alien and player"""
+        collision = pygame.sprite.groupcollide(
+            self.groups['aliens'],
+            self.groups['player'],
+            False,
+            False)
+        
+        if collision:
+            self.events.append(('PLAYER_DEAD', 0))
