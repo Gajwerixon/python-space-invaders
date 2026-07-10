@@ -1,6 +1,6 @@
 from config import LINES, PLAY_AREA
 
-from entities.line_block import LineBlocks
+from entities.line_block import LineBlock
 
 class LineSystem:
     """LineBlocks system class"""
@@ -12,4 +12,4 @@ class LineSystem:
         for block in range(LINES['count']):
             pos_x = LINES['size'][0] * block
             pos_y = PLAY_AREA.bottom + LINES['size'][1]
-            LineBlocks((pos_x, pos_y), block, self.line_group)
+            LineBlock((pos_x, pos_y), block, self.line_group)
