@@ -15,7 +15,7 @@ class TimerSystem:
         self.time_left = self.duration
 
     def update(self, dt):
-        """Update timer"""
+        """Update timer base on dt"""
         if self.active:
             self.time_left -= dt
             if self.time_left <= 0:
