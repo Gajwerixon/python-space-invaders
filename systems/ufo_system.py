@@ -19,6 +19,8 @@ class UfoSystem:
         self.score = UFO['score_values']
         self.current_score_index = 0
 
+        self.events = []
+
         self.spawn_ufo_timer = TimerSystem(UFO['spawn_timer'])
         self.spawn_ufo_timer.start()
 
@@ -29,11 +31,13 @@ class UfoSystem:
             if not self.spawn_ufo_timer.active:
                 self.spawn_new_ufo()
                 self.phase = 'ALIVE'
+                self.events.append('UFO_SPAWNED')
 
         elif self.phase == 'ALIVE':
             self.ufo.update(dt)
             if self.outside_play_arena():
                 self.handle_ufo_dead()
+                self.events.append('UFO_DEAD')
 
     def spawn_new_ufo(self):
         """Spawn new Ufo"""
@@ -58,6 +62,7 @@ class UfoSystem:
         """Handle Ufo kill"""
         self.phase = 'SPAWN_DELAY'
         self.spawn_ufo_timer.start()
+        self.events.append('UFO_DEAD')
 
         if self.ufo:
             self.ufo.kill()
