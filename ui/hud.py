@@ -7,11 +7,24 @@ class HUD:
         self.digits = digits
         self.ship_img = ship_img
 
-    def draw_hud(self, score_1, score_2, high_score, lives, credit, surface, show_lives):
-        self.draw_top_hud(score_1, score_2, high_score, surface)
-        self.draw_bottom_hud(lives, credit, surface, show_lives)
+    def draw_hud(self, score_1, score_2, high_score, lives, credits, surface, show_lives):
+        """Draw Top and Bottom hud"""
+        self.draw_top_hud(
+            score_1, 
+            score_2, 
+            high_score, 
+            surface
+        )
+
+        self.draw_bottom_hud(
+            lives, 
+            credits, 
+            surface, 
+            show_lives
+        )
 
     def draw_top_hud(self, score_1, score_2, high_score, surface):
+        """Draw Top hud"""
         self.draw_score(
             'S C O R E < 1 >', 
             score_1,
@@ -37,12 +50,14 @@ class HUD:
         )
 
     def draw_bottom_hud(self, lives, credits, surface, show_lives):
+        """Draw Bottom hud"""
         if show_lives:
             self.draw_lives(surface, lives)
 
-        self.draw_credit(surface, credits)
+        self.draw_credits(surface, credits)
 
     def draw_score(self, text, value, pos, anchor, surface):
+        """Draw score"""
         text_rect = self.blit_text(surface, text, pos, anchor)
     
         digits = self.format_number(value)
@@ -51,6 +66,7 @@ class HUD:
         self.draw_number(digits, start_pos, 'top_hud', surface)
 
     def draw_lives(self, surface, lives):
+        """Draw lives"""
         text_rect = self.blit_text(
             surface, 
             str(lives), 
@@ -65,8 +81,13 @@ class HUD:
             for i in range(lives - 1):
                 surface.blit(self.ship_img, (x_start + i * BOTTOM_HUD['ship_offset'], y))
 
-    def draw_credit(self, surface, credits):
-        pos = (WIDTH - BOTTOM_HUD['right_margin'], PLAY_AREA.bottom + BOTTOM_HUD['padding_y'])
+    def draw_credits(self, surface, credits):
+        """Draw credits"""
+        pos = (
+            WIDTH - BOTTOM_HUD['right_margin'], 
+            PLAY_AREA.bottom + BOTTOM_HUD['padding_y']
+        )
+
         rect = self.blit_text(surface, f'C R E D I T', pos, 'topright')
 
         digits = self.format_number(credits, length=2)
@@ -81,9 +102,11 @@ class HUD:
         return rect
     
     def format_number(self, value, length=4):
+        """Format number into strings"""
         return str(value).zfill(length)
     
     def draw_number(self, digits, start_pos, hud, surface):
+        """Draw number"""
         x, y = start_pos
 
         for digit in digits:
