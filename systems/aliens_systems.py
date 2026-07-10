@@ -13,23 +13,29 @@ class AliensSystem:
         self.alien_group = alien_group
         self.current_level = current_level
 
+        # Formation
         self.start_pos = (80, PLAY_AREA.bottom - 350)
         self.aliens_formation_list = []
+        self.num_aliens = 0
 
+        # Movement
         self.direction = pygame.Vector2(1, 0)
-        self.base_speed = self.get_base_speed()
-        self.aliens_move_timer = TimerSystem(self.base_speed)
-        self.max_number_of_bullets = 1
-        self.shoot_timer = TimerSystem(1)
-
         self.state = 'move_horizontal'
         self.current_alien = 0
         self.animation_index = 0
-        self.shooting_enabled = False
-
-        self.num_aliens = 0
-        self.events = []
         self.wall_collision_triggered = False
+
+        # Timers
+        self.base_speed = self.get_base_speed()
+        self.aliens_move_timer = TimerSystem(self.base_speed)
+        self.shoot_timer = TimerSystem(1)
+
+        # Shooting
+        self.shooting_enabled = False
+        self.max_number_of_bullets = 1
+
+        # Events
+        self.events = []
 
     def update(self, dt):
         """Update formation"""
@@ -40,12 +46,11 @@ class AliensSystem:
             self.events.append('ALL_ALIENS_DEAD')
             return
         
-        self.update_aliens_formation()
-        
+        self.update_movement()
         self.formation_shoot()
 
-    def update_aliens_formation(self):
-        """Update alien formation"""
+    def update_movement(self):
+        """Update formation movement"""
         if self.aliens_move_timer.active:
             return
         
@@ -90,7 +95,7 @@ class AliensSystem:
             self.shoot_timer.start()
 
     def advance_cycle(self):
-        """Advance cycle"""
+        """Advance index to the next living alien, skipping dead ones"""
         self.current_alien += 1
         total_aliens = len(self.aliens_formation_list)
 
@@ -103,7 +108,7 @@ class AliensSystem:
                 self._end_of_turn_reset()
 
     def _end_of_turn_reset(self):
-        """Reset index and update formation state at"""
+        """Reset index and update formation state"""
         self.current_alien = 0
         self.animation_index = 1 - self.animation_index
 
@@ -117,8 +122,9 @@ class AliensSystem:
             self.state = "move_horizontal"
 
     def create_bullet(self):
-        """Create bullet"""
-        lowest_aliens = self.get_lowest_aliens()
+        """Select a random alien from the frontline columns to fire"""
+        lowest_aliens = self._get_lowest_aliens()
+
         if lowest_aliens:
             alien = choice(lowest_aliens)
             AlienBullet(
@@ -127,9 +133,10 @@ class AliensSystem:
                 self.alien_bullets_group
             )
 
-    def get_lowest_aliens(self):
-        """Get the lowest alien"""
+    def _get_lowest_aliens(self):
+        """Filter the formation to retrieve only the lowest alien from each column"""
         columns = {}
+
         for alien in self.alien_group:
             col = alien.grid_pos[1]
             if col not in columns or alien.pos.y > columns[col].pos.y:
@@ -137,7 +144,7 @@ class AliensSystem:
         return list(columns.values())
 
     def update_speed(self):
-        """Update speed"""
+        """Calculate movement speed adjustments"""
         if self.num_aliens == 0:
             return
         
@@ -146,7 +153,7 @@ class AliensSystem:
         self.aliens_move_timer.set_duration(new_delay)
 
     def get_base_speed(self):
-        """Get base speed"""
+        """Get starting difficulty delay based on current wave level"""
         base_delay = ALIENS_MOVEMENT["timer"]
 
         level_multiplier = 1 - (self.current_level - 1) * 0.05
