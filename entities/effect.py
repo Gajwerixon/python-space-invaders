@@ -9,9 +9,11 @@ class Effect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         setattr(self.rect, anchor, pos)
 
+        # Timers
         self.timer = TimerSystem(duration)
         self.timer.start()
 
+        # Type
         self.type = type
 
     def update(self, dt):
