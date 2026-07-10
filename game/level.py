@@ -22,6 +22,7 @@ class Level:
         self.score_1 = 0
         self.score_2 = 0
         self.current_level = 1
+        self.player_shots_count = 0
 
         self.player = None
         self.shield_system = None
@@ -138,13 +139,16 @@ class Level:
         for event in self.player.events:
             if event == 'PLAYER_SHOOT':
                 self.sound_system.player_shoot_play()
+                self.player_shots_count += 1
             
         self.player.events.clear()
 
     def handle_ufo_events(self):
         """Handle UfoSystem events"""
         for event in self.ufo_system.events:
-            if event == 'UFO_SPAWNED':
+            if event == 'SPAWN_UFO':
+                self.ufo_system.spawn_new_ufo(self.player_shots_count)
+            elif event == 'UFO_SPAWNED':
                 self.sound_system.ufo_movement_start()
             elif event == 'UFO_DEAD':
                 self.sound_system.ufo_movement_stop()
